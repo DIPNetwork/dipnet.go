@@ -22,14 +22,14 @@ import (
 	"fmt"
 	"testing"
 
+	"dpinet_dpos/go-ethereum/consensus/ethash"
+	"dpinet_dpos/go-ethereum/core"
+	"dpinet_dpos/go-ethereum/core/state"
+	"dpinet_dpos/go-ethereum/core/vm"
+	"dpinet_dpos/go-ethereum/ethdb"
+	"dpinet_dpos/go-ethereum/params"
+	"dpinet_dpos/go-ethereum/trie"
 	"github.com/davecgh/go-spew/spew"
-	"github.com/meitu/go-ethereum/consensus/ethash"
-	"github.com/meitu/go-ethereum/core"
-	"github.com/meitu/go-ethereum/core/state"
-	"github.com/meitu/go-ethereum/core/vm"
-	"github.com/meitu/go-ethereum/ethdb"
-	"github.com/meitu/go-ethereum/params"
-	"github.com/meitu/go-ethereum/trie"
 )
 
 func TestNodeIterator(t *testing.T) {

@@ -5,7 +5,7 @@ package whisperv6
 import (
 	"encoding/json"
 
-	"github.com/meitu/go-ethereum/common/hexutil"
+	"dpinet_dpos/go-ethereum/common/hexutil"
 )
 
 var _ = (*messageOverride)(nil)

@@ -23,14 +23,14 @@ import (
 	"testing"
 	"time"
 
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/common/bitutil"
-	"github.com/meitu/go-ethereum/core"
-	"github.com/meitu/go-ethereum/core/bloombits"
-	"github.com/meitu/go-ethereum/core/types"
-	"github.com/meitu/go-ethereum/ethdb"
-	"github.com/meitu/go-ethereum/event"
-	"github.com/meitu/go-ethereum/node"
+	"dpinet_dpos/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/common/bitutil"
+	"dpinet_dpos/go-ethereum/core"
+	"dpinet_dpos/go-ethereum/core/bloombits"
+	"dpinet_dpos/go-ethereum/core/types"
+	"dpinet_dpos/go-ethereum/ethdb"
+	"dpinet_dpos/go-ethereum/event"
+	"dpinet_dpos/go-ethereum/node"
 )
 
 func BenchmarkBloomBits512(b *testing.B) {

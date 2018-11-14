@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/meitu/go-ethereum/log"
+	"dpinet_dpos/go-ethereum/log"
 )
 
 /*
@@ -29,8 +29,8 @@ see https://github.com/meitu/go-ethereum/issues/2040
 Usage:
 
 import (
- "github.com/meitu/go-ethereum/common/httpclient"
- "github.com/meitu/go-ethereum/swarm/api/http"
+ "dpinet_dpos/go-ethereum/common/httpclient"
+ "dpinet_dpos/go-ethereum/swarm/api/http"
 )
 client := httpclient.New()
 // for (private) swarm proxy running locally

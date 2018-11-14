@@ -21,10 +21,10 @@ import (
 	"io"
 	"os"
 
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/core/types"
-	"github.com/meitu/go-ethereum/log"
-	"github.com/meitu/go-ethereum/rlp"
+	"dpinet_dpos/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/core/types"
+	"dpinet_dpos/go-ethereum/log"
+	"dpinet_dpos/go-ethereum/rlp"
 )
 
 // errNoActiveJournal is returned if a transaction is attempted to be inserted

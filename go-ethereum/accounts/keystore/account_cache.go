@@ -27,9 +27,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/meitu/go-ethereum/accounts"
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/log"
+	"dpinet_dpos/go-ethereum/accounts"
+	"dpinet_dpos/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/log"
 	"gopkg.in/fatih/set.v0"
 )
 

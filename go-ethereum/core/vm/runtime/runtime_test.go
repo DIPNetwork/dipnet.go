@@ -21,11 +21,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/meitu/go-ethereum/accounts/abi"
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/core/state"
-	"github.com/meitu/go-ethereum/core/vm"
-	"github.com/meitu/go-ethereum/ethdb"
+	"dpinet_dpos/go-ethereum/accounts/abi"
+	"dpinet_dpos/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/core/state"
+	"dpinet_dpos/go-ethereum/core/vm"
+	"dpinet_dpos/go-ethereum/ethdb"
 )
 
 func TestDefaults(t *testing.T) {

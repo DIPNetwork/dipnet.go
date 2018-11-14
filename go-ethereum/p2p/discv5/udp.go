@@ -24,12 +24,12 @@ import (
 	"net"
 	"time"
 
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/crypto"
-	"github.com/meitu/go-ethereum/log"
-	"github.com/meitu/go-ethereum/p2p/nat"
-	"github.com/meitu/go-ethereum/p2p/netutil"
-	"github.com/meitu/go-ethereum/rlp"
+	"dpinet_dpos/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/crypto"
+	"dpinet_dpos/go-ethereum/log"
+	"dpinet_dpos/go-ethereum/p2p/nat"
+	"dpinet_dpos/go-ethereum/p2p/netutil"
+	"dpinet_dpos/go-ethereum/rlp"
 )
 
 const Version = 4

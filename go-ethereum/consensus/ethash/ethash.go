@@ -31,10 +31,10 @@ import (
 	"time"
 	"unsafe"
 
+	"dpinet_dpos/go-ethereum/consensus"
+	"dpinet_dpos/go-ethereum/log"
+	"dpinet_dpos/go-ethereum/rpc"
 	mmap "github.com/edsrzf/mmap-go"
-	"github.com/meitu/go-ethereum/consensus"
-	"github.com/meitu/go-ethereum/log"
-	"github.com/meitu/go-ethereum/rpc"
 	metrics "github.com/rcrowley/go-metrics"
 )
 

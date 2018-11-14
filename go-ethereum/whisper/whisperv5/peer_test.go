@@ -25,11 +25,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/crypto"
-	"github.com/meitu/go-ethereum/p2p"
-	"github.com/meitu/go-ethereum/p2p/discover"
-	"github.com/meitu/go-ethereum/p2p/nat"
+	"dpinet_dpos/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/crypto"
+	"dpinet_dpos/go-ethereum/p2p"
+	"dpinet_dpos/go-ethereum/p2p/discover"
+	"dpinet_dpos/go-ethereum/p2p/nat"
 )
 
 var keys []string = []string{

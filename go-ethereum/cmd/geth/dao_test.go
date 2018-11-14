@@ -23,9 +23,9 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/core"
-	"github.com/meitu/go-ethereum/ethdb"
+	"dpinet_dpos/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/core"
+	"dpinet_dpos/go-ethereum/ethdb"
 )
 
 // Genesis block for nodes which don't care about the DAO fork (i.e. not configured)

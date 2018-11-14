@@ -20,10 +20,10 @@ import (
 	"reflect"
 	"testing"
 
+	"dpinet_dpos/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/core/state"
+	"dpinet_dpos/go-ethereum/ethdb"
 	"github.com/davecgh/go-spew/spew"
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/core/state"
-	"github.com/meitu/go-ethereum/ethdb"
 )
 
 var dumper = spew.ConfigState{Indent: "    "}

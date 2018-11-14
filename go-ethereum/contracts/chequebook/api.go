@@ -20,7 +20,7 @@ import (
 	"errors"
 	"math/big"
 
-	"github.com/meitu/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/common"
 )
 
 const Version = "1.0"

@@ -22,11 +22,11 @@ import (
 	"math/big"
 	"strings"
 
-	"github.com/meitu/go-ethereum/accounts/abi/bind"
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/contracts/ens/contract"
-	"github.com/meitu/go-ethereum/core/types"
-	"github.com/meitu/go-ethereum/crypto"
+	"dpinet_dpos/go-ethereum/accounts/abi/bind"
+	"dpinet_dpos/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/contracts/ens/contract"
+	"dpinet_dpos/go-ethereum/core/types"
+	"dpinet_dpos/go-ethereum/crypto"
 )
 
 var (

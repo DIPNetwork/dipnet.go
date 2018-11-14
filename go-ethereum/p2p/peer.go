@@ -24,11 +24,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/meitu/go-ethereum/common/mclock"
-	"github.com/meitu/go-ethereum/event"
-	"github.com/meitu/go-ethereum/log"
-	"github.com/meitu/go-ethereum/p2p/discover"
-	"github.com/meitu/go-ethereum/rlp"
+	"dpinet_dpos/go-ethereum/common/mclock"
+	"dpinet_dpos/go-ethereum/event"
+	"dpinet_dpos/go-ethereum/log"
+	"dpinet_dpos/go-ethereum/p2p/discover"
+	"dpinet_dpos/go-ethereum/rlp"
 )
 
 const (

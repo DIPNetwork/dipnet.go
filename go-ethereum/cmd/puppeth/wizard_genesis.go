@@ -24,10 +24,10 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/core"
-	"github.com/meitu/go-ethereum/log"
-	"github.com/meitu/go-ethereum/params"
+	"dpinet_dpos/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/core"
+	"dpinet_dpos/go-ethereum/log"
+	"dpinet_dpos/go-ethereum/params"
 )
 
 // makeGenesis creates a new genesis struct based on some user input.

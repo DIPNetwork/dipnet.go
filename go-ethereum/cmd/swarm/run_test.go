@@ -26,13 +26,13 @@ import (
 	"testing"
 	"time"
 
+	"dpinet_dpos/go-ethereum/accounts/keystore"
+	"dpinet_dpos/go-ethereum/internal/cmdtest"
+	"dpinet_dpos/go-ethereum/node"
+	"dpinet_dpos/go-ethereum/p2p"
+	"dpinet_dpos/go-ethereum/rpc"
+	"dpinet_dpos/go-ethereum/swarm"
 	"github.com/docker/docker/pkg/reexec"
-	"github.com/meitu/go-ethereum/accounts/keystore"
-	"github.com/meitu/go-ethereum/internal/cmdtest"
-	"github.com/meitu/go-ethereum/node"
-	"github.com/meitu/go-ethereum/p2p"
-	"github.com/meitu/go-ethereum/rpc"
-	"github.com/meitu/go-ethereum/swarm"
 )
 
 func init() {

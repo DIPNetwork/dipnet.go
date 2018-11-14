@@ -25,13 +25,13 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/meitu/go-ethereum/log"
-	"github.com/meitu/go-ethereum/node"
-	"github.com/meitu/go-ethereum/p2p"
-	"github.com/meitu/go-ethereum/p2p/discover"
-	"github.com/meitu/go-ethereum/p2p/simulations"
-	"github.com/meitu/go-ethereum/p2p/simulations/adapters"
-	"github.com/meitu/go-ethereum/rpc"
+	"dpinet_dpos/go-ethereum/log"
+	"dpinet_dpos/go-ethereum/node"
+	"dpinet_dpos/go-ethereum/p2p"
+	"dpinet_dpos/go-ethereum/p2p/discover"
+	"dpinet_dpos/go-ethereum/p2p/simulations"
+	"dpinet_dpos/go-ethereum/p2p/simulations/adapters"
+	"dpinet_dpos/go-ethereum/rpc"
 )
 
 var adapterType = flag.String("adapter", "sim", `node adapter to use (one of "sim", "exec" or "docker")`)

@@ -22,13 +22,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/common/mclock"
-	"github.com/meitu/go-ethereum/consensus"
-	"github.com/meitu/go-ethereum/core"
-	"github.com/meitu/go-ethereum/core/types"
-	"github.com/meitu/go-ethereum/light"
-	"github.com/meitu/go-ethereum/log"
+	"dpinet_dpos/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/common/mclock"
+	"dpinet_dpos/go-ethereum/consensus"
+	"dpinet_dpos/go-ethereum/core"
+	"dpinet_dpos/go-ethereum/core/types"
+	"dpinet_dpos/go-ethereum/light"
+	"dpinet_dpos/go-ethereum/log"
 )
 
 const (

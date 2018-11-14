@@ -19,7 +19,7 @@ package tests
 import (
 	"testing"
 
-	"github.com/meitu/go-ethereum/core/vm"
+	"dpinet_dpos/go-ethereum/core/vm"
 )
 
 func TestVM(t *testing.T) {

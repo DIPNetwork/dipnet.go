@@ -23,7 +23,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/meitu/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/common"
 )
 
 const testSectionSize = 4096

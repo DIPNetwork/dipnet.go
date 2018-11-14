@@ -23,11 +23,11 @@ import (
 	"net"
 	"sync"
 
-	"github.com/meitu/go-ethereum/event"
-	"github.com/meitu/go-ethereum/node"
-	"github.com/meitu/go-ethereum/p2p"
-	"github.com/meitu/go-ethereum/p2p/discover"
-	"github.com/meitu/go-ethereum/rpc"
+	"dpinet_dpos/go-ethereum/event"
+	"dpinet_dpos/go-ethereum/node"
+	"dpinet_dpos/go-ethereum/p2p"
+	"dpinet_dpos/go-ethereum/p2p/discover"
+	"dpinet_dpos/go-ethereum/rpc"
 )
 
 // SimAdapter is a NodeAdapter which creates in-memory simulation nodes and

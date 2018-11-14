@@ -27,8 +27,8 @@ import (
 	"testing/quick"
 	"time"
 
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/crypto"
+	"dpinet_dpos/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/crypto"
 )
 
 func TestTable_pingReplace(t *testing.T) {

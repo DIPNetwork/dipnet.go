@@ -24,8 +24,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/swarm/storage"
+	"dpinet_dpos/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/swarm/storage"
 )
 
 var testDownloadDir, _ = ioutil.TempDir(os.TempDir(), "bzz-test")

@@ -19,7 +19,7 @@ package vm
 import (
 	"math/big"
 
-	"github.com/meitu/go-ethereum/params"
+	"dpinet_dpos/go-ethereum/params"
 )
 
 const (

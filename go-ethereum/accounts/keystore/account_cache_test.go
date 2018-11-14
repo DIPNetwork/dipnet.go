@@ -27,10 +27,10 @@ import (
 	"testing"
 	"time"
 
+	"dpinet_dpos/go-ethereum/accounts"
+	"dpinet_dpos/go-ethereum/common"
 	"github.com/cespare/cp"
 	"github.com/davecgh/go-spew/spew"
-	"github.com/meitu/go-ethereum/accounts"
-	"github.com/meitu/go-ethereum/common"
 )
 
 var (

@@ -26,9 +26,9 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/log"
-	"github.com/meitu/go-ethereum/swarm/storage"
+	"dpinet_dpos/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/log"
+	"dpinet_dpos/go-ethereum/swarm/storage"
 )
 
 const maxParallelFiles = 5

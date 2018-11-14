@@ -24,17 +24,17 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/common/hexutil"
-	"github.com/meitu/go-ethereum/common/math"
-	"github.com/meitu/go-ethereum/consensus/ethash"
-	"github.com/meitu/go-ethereum/core"
-	"github.com/meitu/go-ethereum/core/state"
-	"github.com/meitu/go-ethereum/core/types"
-	"github.com/meitu/go-ethereum/core/vm"
-	"github.com/meitu/go-ethereum/ethdb"
-	"github.com/meitu/go-ethereum/params"
-	"github.com/meitu/go-ethereum/rlp"
+	"dpinet_dpos/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/common/hexutil"
+	"dpinet_dpos/go-ethereum/common/math"
+	"dpinet_dpos/go-ethereum/consensus/ethash"
+	"dpinet_dpos/go-ethereum/core"
+	"dpinet_dpos/go-ethereum/core/state"
+	"dpinet_dpos/go-ethereum/core/types"
+	"dpinet_dpos/go-ethereum/core/vm"
+	"dpinet_dpos/go-ethereum/ethdb"
+	"dpinet_dpos/go-ethereum/params"
+	"dpinet_dpos/go-ethereum/rlp"
 )
 
 // A BlockTest checks handling of entire blocks.

@@ -22,7 +22,7 @@ package storage
 import (
 	"fmt"
 
-	"github.com/meitu/go-ethereum/compression/rle"
+	"dpinet_dpos/go-ethereum/compression/rle"
 	"github.com/syndtr/goleveldb/leveldb"
 	"github.com/syndtr/goleveldb/leveldb/iterator"
 	"github.com/syndtr/goleveldb/leveldb/opt"

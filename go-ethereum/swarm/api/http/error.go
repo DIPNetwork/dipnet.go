@@ -28,8 +28,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/meitu/go-ethereum/log"
-	"github.com/meitu/go-ethereum/swarm/api"
+	"dpinet_dpos/go-ethereum/log"
+	"dpinet_dpos/go-ethereum/swarm/api"
 )
 
 //templateMap holds a mapping of an HTTP error code to a template
@@ -56,7 +56,7 @@ func initErrHandling() {
 	multipleChoicesPage := GetMultipleChoicesErrorPage()
 	//map the codes to the available pages
 	tnames := map[int]string{
-		0: genErrPage, //default
+		0:                              genErrPage, //default
 		http.StatusBadRequest:          genErrPage,
 		http.StatusNotFound:            notFoundPage,
 		http.StatusMultipleChoices:     multipleChoicesPage,

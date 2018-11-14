@@ -22,12 +22,12 @@ import (
 	"testing"
 	"time"
 
-	"github.com/meitu/go-ethereum/accounts/abi/bind"
-	"github.com/meitu/go-ethereum/accounts/abi/bind/backends"
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/core"
-	"github.com/meitu/go-ethereum/core/types"
-	"github.com/meitu/go-ethereum/crypto"
+	"dpinet_dpos/go-ethereum/accounts/abi/bind"
+	"dpinet_dpos/go-ethereum/accounts/abi/bind/backends"
+	"dpinet_dpos/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/core"
+	"dpinet_dpos/go-ethereum/core/types"
+	"dpinet_dpos/go-ethereum/crypto"
 )
 
 var testKey, _ = crypto.HexToECDSA("b71c71a67e1177ad4e901695e1b4b9ee17ae16c6668d313eac2f96dbcda3f291")

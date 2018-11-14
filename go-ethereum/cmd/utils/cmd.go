@@ -26,12 +26,12 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/meitu/go-ethereum/core"
-	"github.com/meitu/go-ethereum/core/types"
-	"github.com/meitu/go-ethereum/internal/debug"
-	"github.com/meitu/go-ethereum/log"
-	"github.com/meitu/go-ethereum/node"
-	"github.com/meitu/go-ethereum/rlp"
+	"dpinet_dpos/go-ethereum/core"
+	"dpinet_dpos/go-ethereum/core/types"
+	"dpinet_dpos/go-ethereum/internal/debug"
+	"dpinet_dpos/go-ethereum/log"
+	"dpinet_dpos/go-ethereum/node"
+	"dpinet_dpos/go-ethereum/rlp"
 )
 
 const (

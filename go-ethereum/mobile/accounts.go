@@ -23,10 +23,10 @@ import (
 	"errors"
 	"time"
 
-	"github.com/meitu/go-ethereum/accounts"
-	"github.com/meitu/go-ethereum/accounts/keystore"
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/crypto"
+	"dpinet_dpos/go-ethereum/accounts"
+	"dpinet_dpos/go-ethereum/accounts/keystore"
+	"dpinet_dpos/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/crypto"
 )
 
 const (

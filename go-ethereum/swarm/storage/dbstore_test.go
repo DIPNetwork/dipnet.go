@@ -21,7 +21,7 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"github.com/meitu/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/common"
 )
 
 func initDbStore(t *testing.T) *DbStore {

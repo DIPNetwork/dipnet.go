@@ -28,11 +28,11 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/meitu/go-ethereum/event"
-	"github.com/meitu/go-ethereum/p2p"
-	"github.com/meitu/go-ethereum/p2p/discover"
-	"github.com/meitu/go-ethereum/p2p/simulations/adapters"
-	"github.com/meitu/go-ethereum/rpc"
+	"dpinet_dpos/go-ethereum/event"
+	"dpinet_dpos/go-ethereum/p2p"
+	"dpinet_dpos/go-ethereum/p2p/discover"
+	"dpinet_dpos/go-ethereum/p2p/simulations/adapters"
+	"dpinet_dpos/go-ethereum/rpc"
 	"github.com/julienschmidt/httprouter"
 	"golang.org/x/net/websocket"
 )

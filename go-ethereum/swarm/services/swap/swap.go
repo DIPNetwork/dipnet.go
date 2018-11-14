@@ -26,14 +26,14 @@ import (
 	"sync"
 	"time"
 
-	"github.com/meitu/go-ethereum/accounts/abi/bind"
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/contracts/chequebook"
-	"github.com/meitu/go-ethereum/contracts/chequebook/contract"
-	"github.com/meitu/go-ethereum/core/types"
-	"github.com/meitu/go-ethereum/crypto"
-	"github.com/meitu/go-ethereum/log"
-	"github.com/meitu/go-ethereum/swarm/services/swap/swap"
+	"dpinet_dpos/go-ethereum/accounts/abi/bind"
+	"dpinet_dpos/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/contracts/chequebook"
+	"dpinet_dpos/go-ethereum/contracts/chequebook/contract"
+	"dpinet_dpos/go-ethereum/core/types"
+	"dpinet_dpos/go-ethereum/crypto"
+	"dpinet_dpos/go-ethereum/log"
+	"dpinet_dpos/go-ethereum/swarm/services/swap/swap"
 )
 
 // SwAP       Swarm Accounting Protocol with

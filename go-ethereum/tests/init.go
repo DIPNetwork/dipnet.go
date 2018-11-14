@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/meitu/go-ethereum/params"
+	"dpinet_dpos/go-ethereum/params"
 )
 
 // This table defines supported forks and their chain config.

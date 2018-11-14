@@ -24,7 +24,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/meitu/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/common"
 )
 
 func TestPack(t *testing.T) {

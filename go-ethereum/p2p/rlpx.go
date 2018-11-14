@@ -35,12 +35,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/meitu/go-ethereum/crypto"
-	"github.com/meitu/go-ethereum/crypto/ecies"
-	"github.com/meitu/go-ethereum/crypto/secp256k1"
-	"github.com/meitu/go-ethereum/crypto/sha3"
-	"github.com/meitu/go-ethereum/p2p/discover"
-	"github.com/meitu/go-ethereum/rlp"
+	"dpinet_dpos/go-ethereum/crypto"
+	"dpinet_dpos/go-ethereum/crypto/ecies"
+	"dpinet_dpos/go-ethereum/crypto/secp256k1"
+	"dpinet_dpos/go-ethereum/crypto/sha3"
+	"dpinet_dpos/go-ethereum/p2p/discover"
+	"dpinet_dpos/go-ethereum/rlp"
 	"github.com/golang/snappy"
 )
 

@@ -21,12 +21,12 @@ import (
 	"os"
 	"os/user"
 
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/common/hexutil"
-	"github.com/meitu/go-ethereum/core"
-	"github.com/meitu/go-ethereum/eth/downloader"
-	"github.com/meitu/go-ethereum/eth/gasprice"
-	"github.com/meitu/go-ethereum/params"
+	"dpinet_dpos/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/common/hexutil"
+	"dpinet_dpos/go-ethereum/core"
+	"dpinet_dpos/go-ethereum/eth/downloader"
+	"dpinet_dpos/go-ethereum/eth/gasprice"
+	"dpinet_dpos/go-ethereum/params"
 )
 
 // DefaultConfig contains default settings for use on the Ethereum main net.

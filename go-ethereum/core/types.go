@@ -19,9 +19,9 @@ package core
 import (
 	"math/big"
 
-	"github.com/meitu/go-ethereum/core/state"
-	"github.com/meitu/go-ethereum/core/types"
-	"github.com/meitu/go-ethereum/core/vm"
+	"dpinet_dpos/go-ethereum/core/state"
+	"dpinet_dpos/go-ethereum/core/types"
+	"dpinet_dpos/go-ethereum/core/vm"
 )
 
 // Validator is an interface which defines the standard for block validation. It

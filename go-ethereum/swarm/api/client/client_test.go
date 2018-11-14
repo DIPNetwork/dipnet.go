@@ -25,8 +25,8 @@ import (
 	"sort"
 	"testing"
 
-	"github.com/meitu/go-ethereum/swarm/api"
-	"github.com/meitu/go-ethereum/swarm/testutil"
+	"dpinet_dpos/go-ethereum/swarm/api"
+	"dpinet_dpos/go-ethereum/swarm/testutil"
 )
 
 // TestClientUploadDownloadRaw test uploading and downloading raw data to swarm

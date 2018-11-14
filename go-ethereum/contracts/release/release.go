@@ -25,15 +25,15 @@ import (
 	"strings"
 	"time"
 
-	"github.com/meitu/go-ethereum/accounts/abi/bind"
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/eth"
-	"github.com/meitu/go-ethereum/internal/ethapi"
-	"github.com/meitu/go-ethereum/les"
-	"github.com/meitu/go-ethereum/log"
-	"github.com/meitu/go-ethereum/node"
-	"github.com/meitu/go-ethereum/p2p"
-	"github.com/meitu/go-ethereum/rpc"
+	"dpinet_dpos/go-ethereum/accounts/abi/bind"
+	"dpinet_dpos/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/eth"
+	"dpinet_dpos/go-ethereum/internal/ethapi"
+	"dpinet_dpos/go-ethereum/les"
+	"dpinet_dpos/go-ethereum/log"
+	"dpinet_dpos/go-ethereum/node"
+	"dpinet_dpos/go-ethereum/p2p"
+	"dpinet_dpos/go-ethereum/rpc"
 )
 
 // Interval to check for new releases

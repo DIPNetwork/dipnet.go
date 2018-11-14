@@ -24,12 +24,12 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/contracts/ens"
-	"github.com/meitu/go-ethereum/crypto"
-	"github.com/meitu/go-ethereum/swarm/network"
-	"github.com/meitu/go-ethereum/swarm/services/swap"
-	"github.com/meitu/go-ethereum/swarm/storage"
+	"dpinet_dpos/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/contracts/ens"
+	"dpinet_dpos/go-ethereum/crypto"
+	"dpinet_dpos/go-ethereum/swarm/network"
+	"dpinet_dpos/go-ethereum/swarm/services/swap"
+	"dpinet_dpos/go-ethereum/swarm/storage"
 )
 
 const (

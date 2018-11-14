@@ -22,8 +22,8 @@ import (
 	"math/rand"
 	"testing"
 
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/ethdb"
+	"dpinet_dpos/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/ethdb"
 )
 
 func TestIterator(t *testing.T) {
@@ -448,16 +448,16 @@ func TestPrefixIterator(t *testing.T) {
 	}
 
 	expect = map[string]string{
-		"do":     "verb",
-		"ether":  "wookiedoo",
-		"horse":  "stallion",
-		"shaman": "horse",
-		"doge":   "coin",
-		"dog":    "puppy",
+		"do":                            "verb",
+		"ether":                         "wookiedoo",
+		"horse":                         "stallion",
+		"shaman":                        "horse",
+		"doge":                          "coin",
+		"dog":                           "puppy",
 		"somethingveryoddindeedthis is": "myothernodedata",
-		"drive":   "car",
-		"dollar":  "cny",
-		"dxracer": "chair",
+		"drive":                         "car",
+		"dollar":                        "cny",
+		"dxracer":                       "chair",
 	}
 	found = make(map[string]string)
 	it = NewIterator(trie.PrefixIterator(nil))

@@ -24,17 +24,17 @@ import (
 	"fmt"
 	"path/filepath"
 
-	"github.com/meitu/go-ethereum/core"
-	"github.com/meitu/go-ethereum/eth"
-	"github.com/meitu/go-ethereum/eth/downloader"
-	"github.com/meitu/go-ethereum/ethclient"
-	"github.com/meitu/go-ethereum/ethstats"
-	"github.com/meitu/go-ethereum/les"
-	"github.com/meitu/go-ethereum/node"
-	"github.com/meitu/go-ethereum/p2p"
-	"github.com/meitu/go-ethereum/p2p/nat"
-	"github.com/meitu/go-ethereum/params"
-	whisper "github.com/meitu/go-ethereum/whisper/whisperv5"
+	"dpinet_dpos/go-ethereum/core"
+	"dpinet_dpos/go-ethereum/eth"
+	"dpinet_dpos/go-ethereum/eth/downloader"
+	"dpinet_dpos/go-ethereum/ethclient"
+	"dpinet_dpos/go-ethereum/ethstats"
+	"dpinet_dpos/go-ethereum/les"
+	"dpinet_dpos/go-ethereum/node"
+	"dpinet_dpos/go-ethereum/p2p"
+	"dpinet_dpos/go-ethereum/p2p/nat"
+	"dpinet_dpos/go-ethereum/params"
+	whisper "dpinet_dpos/go-ethereum/whisper/whisperv5"
 )
 
 // NodeConfig represents the collection of configuration values to fine tune the Geth

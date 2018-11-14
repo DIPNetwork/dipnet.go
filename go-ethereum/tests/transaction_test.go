@@ -20,7 +20,7 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/meitu/go-ethereum/params"
+	"dpinet_dpos/go-ethereum/params"
 )
 
 func TestTransaction(t *testing.T) {

@@ -30,8 +30,8 @@ import (
 	"testing"
 	"time"
 
+	"dpinet_dpos/go-ethereum/log"
 	"github.com/davecgh/go-spew/spew"
-	"github.com/meitu/go-ethereum/log"
 )
 
 func TestClientRequest(t *testing.T) {

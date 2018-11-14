@@ -25,9 +25,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/meitu/go-ethereum/crypto"
-	"github.com/meitu/go-ethereum/crypto/sha3"
-	"github.com/meitu/go-ethereum/p2p/discover"
+	"dpinet_dpos/go-ethereum/crypto"
+	"dpinet_dpos/go-ethereum/crypto/sha3"
+	"dpinet_dpos/go-ethereum/p2p/discover"
 )
 
 func init() {

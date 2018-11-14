@@ -24,7 +24,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/meitu/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/common"
 )
 
 // Hash represents the 32 byte Keccak256 hash of arbitrary data.

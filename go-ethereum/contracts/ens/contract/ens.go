@@ -6,10 +6,10 @@ package contract
 import (
 	"strings"
 
-	"github.com/meitu/go-ethereum/accounts/abi"
-	"github.com/meitu/go-ethereum/accounts/abi/bind"
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/core/types"
+	"dpinet_dpos/go-ethereum/accounts/abi"
+	"dpinet_dpos/go-ethereum/accounts/abi/bind"
+	"dpinet_dpos/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/core/types"
 )
 
 // ENSABI is the input ABI used to generate the binding from.

@@ -30,8 +30,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/meitu/go-ethereum/accounts/keystore"
-	"github.com/meitu/go-ethereum/core/types"
+	"dpinet_dpos/go-ethereum/accounts/keystore"
+	"dpinet_dpos/go-ethereum/core/types"
 )
 
 // Tests that the account management snippets work correctly.

@@ -35,12 +35,12 @@ import (
 	"syscall"
 	"time"
 
+	"dpinet_dpos/go-ethereum/log"
+	"dpinet_dpos/go-ethereum/node"
+	"dpinet_dpos/go-ethereum/p2p"
+	"dpinet_dpos/go-ethereum/p2p/discover"
+	"dpinet_dpos/go-ethereum/rpc"
 	"github.com/docker/docker/pkg/reexec"
-	"github.com/meitu/go-ethereum/log"
-	"github.com/meitu/go-ethereum/node"
-	"github.com/meitu/go-ethereum/p2p"
-	"github.com/meitu/go-ethereum/p2p/discover"
-	"github.com/meitu/go-ethereum/rpc"
 	"golang.org/x/net/websocket"
 )
 

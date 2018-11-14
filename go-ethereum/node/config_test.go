@@ -24,8 +24,8 @@ import (
 	"runtime"
 	"testing"
 
-	"github.com/meitu/go-ethereum/crypto"
-	"github.com/meitu/go-ethereum/p2p"
+	"dpinet_dpos/go-ethereum/crypto"
+	"dpinet_dpos/go-ethereum/p2p"
 )
 
 // Tests that datadirs can be successfully created, be them manually configured

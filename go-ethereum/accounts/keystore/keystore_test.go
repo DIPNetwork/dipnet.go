@@ -26,9 +26,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/meitu/go-ethereum/accounts"
-	"github.com/meitu/go-ethereum/common"
-	"github.com/meitu/go-ethereum/event"
+	"dpinet_dpos/go-ethereum/accounts"
+	"dpinet_dpos/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/event"
 )
 
 var testSigData = make([]byte, 32)

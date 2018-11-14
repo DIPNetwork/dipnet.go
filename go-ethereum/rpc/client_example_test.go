@@ -22,7 +22,7 @@ import (
 	"math/big"
 	"time"
 
-	"github.com/meitu/go-ethereum/rpc"
+	"dpinet_dpos/go-ethereum/rpc"
 )
 
 // In this example, our client whishes to track the latest 'block number'

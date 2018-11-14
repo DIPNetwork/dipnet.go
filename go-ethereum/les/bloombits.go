@@ -19,8 +19,8 @@ package les
 import (
 	"time"
 
-	"github.com/meitu/go-ethereum/common/bitutil"
-	"github.com/meitu/go-ethereum/light"
+	"dpinet_dpos/go-ethereum/common/bitutil"
+	"dpinet_dpos/go-ethereum/light"
 )
 
 const (

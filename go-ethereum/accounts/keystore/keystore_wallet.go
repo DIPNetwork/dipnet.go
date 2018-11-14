@@ -19,9 +19,9 @@ package keystore
 import (
 	"math/big"
 
-	ethereum "github.com/meitu/go-ethereum"
-	"github.com/meitu/go-ethereum/accounts"
-	"github.com/meitu/go-ethereum/core/types"
+	ethereum "dpinet_dpos/go-ethereum"
+	"dpinet_dpos/go-ethereum/accounts"
+	"dpinet_dpos/go-ethereum/core/types"
 )
 
 // keystoreWallet implements the accounts.Wallet interface for the original

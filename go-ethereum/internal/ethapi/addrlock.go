@@ -19,7 +19,7 @@ package ethapi
 import (
 	"sync"
 
-	"github.com/meitu/go-ethereum/common"
+	"dpinet_dpos/go-ethereum/common"
 )
 
 type AddrLocker struct {

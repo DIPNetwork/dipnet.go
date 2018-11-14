@@ -21,8 +21,8 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/meitu/go-ethereum/log"
-	"github.com/meitu/go-ethereum/swarm/storage"
+	"dpinet_dpos/go-ethereum/log"
+	"dpinet_dpos/go-ethereum/swarm/storage"
 )
 
 const requesterCount = 3

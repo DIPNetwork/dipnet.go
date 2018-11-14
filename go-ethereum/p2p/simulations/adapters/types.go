@@ -24,12 +24,12 @@ import (
 	"net"
 	"os"
 
+	"dpinet_dpos/go-ethereum/crypto"
+	"dpinet_dpos/go-ethereum/node"
+	"dpinet_dpos/go-ethereum/p2p"
+	"dpinet_dpos/go-ethereum/p2p/discover"
+	"dpinet_dpos/go-ethereum/rpc"
 	"github.com/docker/docker/pkg/reexec"
-	"github.com/meitu/go-ethereum/crypto"
-	"github.com/meitu/go-ethereum/node"
-	"github.com/meitu/go-ethereum/p2p"
-	"github.com/meitu/go-ethereum/p2p/discover"
-	"github.com/meitu/go-ethereum/rpc"
 )
 
 // Node represents a node in a simulation network which is created by a

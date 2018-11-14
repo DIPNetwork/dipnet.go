@@ -22,9 +22,9 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/meitu/go-ethereum/cmd/utils"
-	"github.com/meitu/go-ethereum/eth"
-	"github.com/meitu/go-ethereum/params"
+	"dpinet_dpos/go-ethereum/cmd/utils"
+	"dpinet_dpos/go-ethereum/eth"
+	"dpinet_dpos/go-ethereum/params"
 	"gopkg.in/urfave/cli.v1"
 )
 

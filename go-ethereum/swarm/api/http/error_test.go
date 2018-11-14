@@ -24,7 +24,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/meitu/go-ethereum/swarm/testutil"
+	"dpinet_dpos/go-ethereum/swarm/testutil"
 )
 
 func TestError(t *testing.T) {

@@ -20,9 +20,9 @@ import (
 	"context"
 	"time"
 
-	"github.com/meitu/go-ethereum/core"
-	"github.com/meitu/go-ethereum/eth/downloader"
-	"github.com/meitu/go-ethereum/light"
+	"dpinet_dpos/go-ethereum/core"
+	"dpinet_dpos/go-ethereum/eth/downloader"
+	"dpinet_dpos/go-ethereum/light"
 )
 
 const (

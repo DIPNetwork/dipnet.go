@@ -22,8 +22,8 @@ import (
 	"errors"
 	"math/big"
 
-	ethereum "github.com/meitu/go-ethereum"
-	"github.com/meitu/go-ethereum/common"
+	ethereum "dpinet_dpos/go-ethereum"
+	"dpinet_dpos/go-ethereum/common"
 )
 
 // Subscription represents an event subscription where events are

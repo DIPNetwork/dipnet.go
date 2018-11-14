@@ -29,12 +29,12 @@ import (
 	"strings"
 	"text/tabwriter"
 
-	"github.com/meitu/go-ethereum/crypto"
-	"github.com/meitu/go-ethereum/p2p"
-	"github.com/meitu/go-ethereum/p2p/discover"
-	"github.com/meitu/go-ethereum/p2p/simulations"
-	"github.com/meitu/go-ethereum/p2p/simulations/adapters"
-	"github.com/meitu/go-ethereum/rpc"
+	"dpinet_dpos/go-ethereum/crypto"
+	"dpinet_dpos/go-ethereum/p2p"
+	"dpinet_dpos/go-ethereum/p2p/discover"
+	"dpinet_dpos/go-ethereum/p2p/simulations"
+	"dpinet_dpos/go-ethereum/p2p/simulations/adapters"
+	"dpinet_dpos/go-ethereum/rpc"
 	"gopkg.in/urfave/cli.v1"
 )
 
