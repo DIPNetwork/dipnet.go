@@ -338,6 +338,12 @@ func (ec *Client) CodeAt(ctx context.Context, account common.Address, blockNumbe
 	return result, err
 }
 
+func (ec *Client) DetailAt(ctx context.Context, hash common.Address, blockNumber *big.Int) ([]byte, error) {
+	var result hexutil.Bytes
+	err := ec.c.CallContext(ctx, &result, "eth_getDetail", hash, toBlockNumArg(blockNumber))
+	return result, err
+}
+
 // NonceAt returns the account nonce of the given account.
 // The block number can be nil, in which case the nonce is taken from the latest known block.
 func (ec *Client) NonceAt(ctx context.Context, account common.Address, blockNumber *big.Int) (uint64, error) {

@@ -557,6 +557,26 @@ func (s *PublicBlockChainAPI) GetCode(ctx context.Context, address common.Addres
 	return code, state.Error()
 }
 
+func (s *PublicBlockChainAPI) GetDetail(ctx context.Context, contractAddress common.Address, blockNr rpc.BlockNumber) (map[string]string, error) {
+	state, _, err := s.b.StateAndHeaderByNumber(ctx, blockNr)
+	if state == nil || err != nil {
+		return nil, err
+	}
+	//addressType := core.GetAddressType(state.GetState(contractAddress, core.HashTypeString("type")))
+	txMap := map[string]string{
+		//"type":       addressType,
+		"coinbase":   "",
+		"temAddress": "",
+	}
+	//if addressType == "contract" {
+	//	coinbase := state.GetState(contractAddress, core.HashTypeString("coinbase"))
+	//	//txMap["coinbase"] = string([]byte(coinbase)[:42])
+	//	txMap["coinbase"] = core.CommonHash2Address(coinbase).String()
+	//	txMap["temAddress"] = state.GetState(contractAddress, core.HashTypeString("template")).String()
+	//}
+	return txMap, nil
+}
+
 // GetStorageAt returns the storage from the state at the given address, key and
 // block number. The rpc.LatestBlockNumber and rpc.PendingBlockNumber meta block
 // numbers are also allowed.

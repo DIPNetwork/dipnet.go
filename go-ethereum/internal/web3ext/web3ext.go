@@ -403,6 +403,11 @@ web3._extend({
 			inputFormatter: [web3._extend.formatters.inputAddressFormatter, null]
 		}),
 		new web3._extend.Method({
+			name: 'getDetail',
+			call: 'eth_getDetail',
+			params: 2,
+		}),
+		new web3._extend.Method({
 			name: 'resend',
 			call: 'eth_resend',
 			params: 3,
