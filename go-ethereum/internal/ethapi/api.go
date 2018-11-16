@@ -572,7 +572,7 @@ func (s *PublicBlockChainAPI) GetDetail(ctx context.Context, contractAddress com
 		coinbase := state.GetState(contractAddress, core.HashTypeString("coinbase"))
 		//txMap["coinbase"] = string([]byte(coinbase)[:42])
 		txMap["coinbase"] = core.CommonHash2Address(coinbase).String()
-		txMap["temAddress"] = state.GetState(contractAddress, core.HashTypeString("template")).String()
+		txMap["temAddress"] = core.CommonHash2Address(state.GetState(contractAddress, core.HashTypeString("template"))).String()
 	}
 	return txMap, nil
 }
