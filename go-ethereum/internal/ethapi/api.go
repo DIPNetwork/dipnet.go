@@ -1026,6 +1026,7 @@ func (s *PublicTransactionPoolAPI) GetTransactionReceipt(hash common.Hash) (map[
 		"gasUsed":           (*hexutil.Big)(receipt.GasUsed),
 		"cumulativeGasUsed": (*hexutil.Big)(receipt.CumulativeGasUsed),
 		"contractAddress":   nil,
+		"templateAddress":   nil,
 		"logs":              receipt.Logs,
 		"logsBloom":         receipt.Bloom,
 	}
@@ -1042,6 +1043,9 @@ func (s *PublicTransactionPoolAPI) GetTransactionReceipt(hash common.Hash) (map[
 	// If the ContractAddress is 20 0x0 bytes, assume it is not a contract creation
 	if receipt.ContractAddress != (common.Address{}) {
 		fields["contractAddress"] = receipt.ContractAddress
+	}
+	if receipt.TemplateAddress != (common.Address{}) {
+		fields["templateAddress"] = receipt.TemplateAddress
 	}
 	return fields, nil
 }

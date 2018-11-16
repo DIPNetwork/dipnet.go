@@ -54,6 +54,7 @@ type Receipt struct {
 	// Implementation fields (don't reorder!)
 	TxHash          common.Hash    `json:"transactionHash" gencodec:"required"`
 	ContractAddress common.Address `json:"contractAddress"`
+	TemplateAddress common.Address `json:"templateAddress"`
 	GasUsed         *big.Int       `json:"gasUsed" gencodec:"required"`
 }
 
@@ -78,6 +79,7 @@ type receiptStorageRLP struct {
 	Bloom             Bloom
 	TxHash            common.Hash
 	ContractAddress   common.Address
+	TemplateAddress   common.Address
 	Logs              []*LogForStorage
 	GasUsed           *big.Int
 }
@@ -158,6 +160,7 @@ func (r *ReceiptForStorage) EncodeRLP(w io.Writer) error {
 		Bloom:             r.Bloom,
 		TxHash:            r.TxHash,
 		ContractAddress:   r.ContractAddress,
+		TemplateAddress:   r.TemplateAddress,
 		Logs:              make([]*LogForStorage, len(r.Logs)),
 		GasUsed:           r.GasUsed,
 	}
@@ -184,7 +187,7 @@ func (r *ReceiptForStorage) DecodeRLP(s *rlp.Stream) error {
 		r.Logs[i] = (*Log)(log)
 	}
 	// Assign the implementation fields
-	r.TxHash, r.ContractAddress, r.GasUsed = dec.TxHash, dec.ContractAddress, dec.GasUsed
+	r.TxHash, r.ContractAddress, r.GasUsed, r.TemplateAddress = dec.TxHash, dec.ContractAddress, dec.GasUsed, dec.TemplateAddress
 	return nil
 }
 

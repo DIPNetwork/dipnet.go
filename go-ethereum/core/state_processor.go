@@ -130,7 +130,14 @@ func ApplyTransaction(config *params.ChainConfig, dposContext *types.DposContext
 	receipt.GasUsed = new(big.Int).Set(gas)
 	// if the transaction created a contract, store the creation address in the receipt.
 	if msg.To() == nil {
-		receipt.ContractAddress = crypto.CreateAddress(vmenv.Context.Origin, tx.Nonce())
+		receipt.TemplateAddress = crypto.CreateAddress(vmenv.Context.Origin, tx.Nonce())
+	} else {
+		//GetAddressType(vmenv.StateDB.GetState(msg.To(),HashTypeString("type")))
+		addressType := GetAddressType(vmenv.StateDB.GetState(*msg.To(), HashTypeString("type")))
+		//fmt.Println("address: =====",addressType)
+		if addressType == "template" {
+			receipt.ContractAddress = crypto.CreateAddress(vmenv.Context.Origin, tx.Nonce())
+		}
 	}
 
 	// Set the receipt logs and create a bloom for filtering

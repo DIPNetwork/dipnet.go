@@ -217,7 +217,19 @@ func (st *StateTransition) TransitionDb() (ret []byte, requiredGas, usedGas *big
 	sender := st.from() // err checked in preCheck
 
 	homestead := st.evm.ChainConfig().IsHomestead(st.evm.BlockNumber)
-	contractCreation := msg.To() == nil
+
+	var addressType string
+	var contractCreation bool
+	if msg.To() == nil {
+		contractCreation = true
+	} else {
+		addressType = GetAddressType(st.state.GetState(*st.msg.To(), HashTypeString("type")))
+		if addressType == "template" {
+			contractCreation = true
+		} else {
+			contractCreation = false
+		}
+	}
 
 	// Pay intrinsic gas
 	// TODO convert to uint64
@@ -236,12 +248,28 @@ func (st *StateTransition) TransitionDb() (ret []byte, requiredGas, usedGas *big
 		// error.
 		vmerr error
 	)
-	if contractCreation {
-		ret, _, st.gas, vmerr = evm.Create(sender, st.data, st.gas, st.value)
+	if msg.To() == nil {
+		//ret, _, st.gas, vmerr = evm.Create(sender, st.data, st.gas, st.value)
+		ret, _, st.gas, vmerr = evm.Template(sender, st.data, st.gas, st.value)
 	} else {
 		// Increment the nonce for the next transaction
-		st.state.SetNonce(sender.Address(), st.state.GetNonce(sender.Address())+1)
-		ret, st.gas, vmerr = evm.Call(sender, st.to().Address(), st.data, st.gas, st.value)
+		switch addressType {
+		case "template":
+			templateCode := st.state.GetCode(*st.msg.To())
+			if len(st.data) > 0 {
+				templateCode = ByteAndByte(templateCode, st.data)
+			}
+			coinbase := st.state.GetState(*st.msg.To(), HashTypeString("coinbase"))
+			templateCode = byteAppend(templateCode, coinbase)
+			templateCode = byteAppendAddress(templateCode, *msg.To())
+			ret, _, st.gas, vmerr = evm.Create(sender, templateCode, st.gas, st.value)
+		case "contract":
+			st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
+			ret, st.gas, vmerr = evm.Call(sender, *st.msg.To(), st.data, st.gas, st.value)
+		case "normal":
+			st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
+			ret, st.gas, vmerr = evm.Call(sender, *st.msg.To(), st.data, st.gas, st.value)
+		}
 	}
 	if vmerr != nil {
 		log.Debug("VM returned with error", "err", vmerr)
@@ -255,9 +283,29 @@ func (st *StateTransition) TransitionDb() (ret []byte, requiredGas, usedGas *big
 	requiredGas = new(big.Int).Set(st.gasUsed())
 
 	st.refundGas()
-	st.state.AddBalance(st.evm.Coinbase, new(big.Int).Mul(st.gasUsed(), st.gasPrice))
-
+	if addressType == "contract" {
+		gas_mine, gas_coinbase := Layer(st.gasUsed().Uint64(), uint64(9), uint64(1))
+		st.state.AddBalance(st.evm.Coinbase, new(big.Int).Mul(new(big.Int).SetUint64(gas_mine), st.gasPrice))
+		address_coinbase := CommonHash2Address(st.state.GetState(*st.msg.To(), HashTypeString("coinbase")))
+		st.state.AddBalance(address_coinbase, new(big.Int).Mul(new(big.Int).SetUint64(gas_coinbase), st.gasPrice))
+	} else {
+		st.state.AddBalance(st.evm.Coinbase, new(big.Int).Mul(new(big.Int).SetUint64(st.gasUsed().Uint64()), st.gasPrice))
+	}
 	return ret, requiredGas, st.gasUsed(), vmerr != nil, err
+}
+
+func Layer(gas, prev, tail uint64) (gas_mine, gas_coinbase uint64) {
+	gas_mine = gas / 10 * prev
+	gas_coinbase = gas / 10 * tail
+	return
+}
+
+func CommonHash2Address(hash common.Hash) common.Address {
+	address := common.Address{}
+	for i := 0; i < len(address); i++ {
+		address[i] = byte(hash[i])
+	}
+	return address
 }
 
 func (st *StateTransition) refundGas() {
@@ -281,4 +329,55 @@ func (st *StateTransition) refundGas() {
 
 func (st *StateTransition) gasUsed() *big.Int {
 	return new(big.Int).Sub(st.initialGas, new(big.Int).SetUint64(st.gas))
+}
+
+func HashTypeString(s string) common.Hash {
+	hash := common.Hash{}
+	code := []byte(s)
+	for i := 0; i < len(s); i++ {
+		hash[i] = code[i]
+	}
+	return hash
+}
+
+func GetAddressType(hash common.Hash) string {
+	var st string
+	for i := 0; i < 8; i++ {
+		code := hash[i]
+		code = byte(code)
+		st += string(code)
+	}
+
+	switch st {
+	case "template":
+		return "template"
+	case "contract":
+		return "contract"
+	default:
+		return "normal"
+	}
+
+}
+
+func byteAppend(template []byte, coinbase common.Hash) []byte {
+	for i := 0; i < 20; i++ {
+		template = append(template, byte(coinbase[i]))
+	}
+	return template
+}
+
+func byteAppendAddress(template []byte, address common.Address) []byte {
+	for i := 0; i < 20; i++ {
+		template = append(template, byte(address[i]))
+	}
+	return template
+}
+
+func ByteAndByte(template []byte, data []byte) []byte {
+
+	for i := 0; i < len(data); i++ {
+		template = append(template, byte(data[i]))
+	}
+
+	return template
 }

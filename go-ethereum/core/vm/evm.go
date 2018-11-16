@@ -329,7 +329,9 @@ func (evm *EVM) Create(caller ContractRef, code []byte, gas uint64, value *big.I
 	// E The contract is a scoped evmironment for this execution context
 	// only.
 	contract := NewContract(caller, AccountRef(contractAddr), value, gas)
-	contract.SetCallCode(&contractAddr, crypto.Keccak256Hash(code), code)
+	codeTail, templateAddressData := getCodeAndCoinBase(code)
+	codePrev, coinbaseData := getCodeAndCoinBase(codeTail)
+	contract.SetCallCode(&contractAddr, crypto.Keccak256Hash(codePrev), codePrev)
 
 	if evm.vmConfig.NoRecursion && evm.depth > 0 {
 		return nil, contractAddr, gas, nil
@@ -344,6 +346,9 @@ func (evm *EVM) Create(caller ContractRef, code []byte, gas uint64, value *big.I
 	if err == nil && !maxCodeSizeExceeded {
 		createDataGas := uint64(len(ret)) * params.CreateDataGas
 		if contract.UseGas(createDataGas) {
+			evm.StateDB.SetState(contractAddr, hashType("type"), hashType("contract"))
+			evm.StateDB.SetState(contractAddr, hashType("coinbase"), hashType(string(coinbaseData)))
+			evm.StateDB.SetState(contractAddr, hashType("template"), hashType(string(templateAddressData)))
 			evm.StateDB.SetCode(contractAddr, ret)
 		} else {
 			err = ErrCodeStoreOutOfGas
@@ -371,3 +376,69 @@ func (evm *EVM) ChainConfig() *params.ChainConfig { return evm.chainConfig }
 
 // Interpreter returns the EVM interpreter
 func (evm *EVM) Interpreter() *Interpreter { return evm.interpreter }
+
+func hashType(s string) common.Hash {
+	hash := common.Hash{}
+	code := []byte(s)
+	for i := 0; i < len(s); i++ {
+		hash[i] = code[i]
+	}
+	return hash
+}
+
+func getCodeAndCoinBase(h []byte) (prev []byte, tail []byte) {
+	for i := 0; i < len(h); i++ {
+		if i <= len(h)-21 {
+			prev = append(prev, h[i])
+		} else {
+			tail = append(tail, h[i])
+		}
+	}
+	return prev, tail
+}
+
+// Create creates a new Template using code as deployment code.
+func (evm *EVM) Template(caller ContractRef, code []byte, gas uint64, value *big.Int) (ret []byte, contractAddr common.Address, leftOverGas uint64, err error) {
+
+	// Depth check execution. Fail if we're trying to execute above the
+	// limit.
+	if evm.depth > int(params.CallCreateDepth) {
+		return nil, common.Address{}, gas, ErrDepth
+	}
+	if !evm.CanTransfer(evm.StateDB, caller.Address(), value) {
+		return nil, common.Address{}, gas, ErrInsufficientBalance
+	}
+	// Ensure there's no existing contract already at the designated address
+	nonce := evm.StateDB.GetNonce(caller.Address())
+	evm.StateDB.SetNonce(caller.Address(), nonce+1)
+
+	contractAddr = crypto.CreateAddress(caller.Address(), nonce)
+	contractHash := evm.StateDB.GetCodeHash(contractAddr)
+	if evm.StateDB.GetNonce(contractAddr) != 0 || (contractHash != (common.Hash{}) && contractHash != emptyCodeHash) {
+		return nil, common.Address{}, 0, ErrContractAddressCollision
+	}
+	// Create a new account on the state
+	//snapshot := evm.StateDB.Snapshot()
+	evm.StateDB.CreateAccount(contractAddr)
+	if evm.ChainConfig().IsEIP158(evm.BlockNumber) {
+		evm.StateDB.SetNonce(contractAddr, 1)
+	}
+	evm.Transfer(evm.StateDB, caller.Address(), contractAddr, value)
+
+	// initialise a new contract and set the code that is to be used by the
+	// E The contract is a scoped evmironment for this execution context
+	// only.
+	contract := NewContract(caller, AccountRef(contractAddr), value, gas)
+	codePrev, codeTail := getCodeAndCoinBase(code)
+	contract.SetCallCode(&contractAddr, crypto.Keccak256Hash(codePrev), codePrev)
+
+	if evm.vmConfig.NoRecursion && evm.depth > 0 {
+		return nil, contractAddr, gas, nil
+	}
+
+	evm.StateDB.SetState(contractAddr, hashType("type"), hashType("template"))
+	evm.StateDB.SetState(contractAddr, hashType("coinbase"), hashType(string(codeTail)))
+	evm.StateDB.SetCode(contractAddr, codePrev)
+
+	return ret, contractAddr, contract.Gas, err
+}
