@@ -7,7 +7,7 @@ WORKDIR $GOPATH/src/dpinet_dpos
 #将服务器的go工程代码加入到docker容器中
 ADD . $GOPATH/src/dpinet_dpos
 #go构建可执行文件
-RUN cd /home/go/src/dpinet_dpos/go-ethereum/cmd/ && go build ./geth
+RUN cd /go-ethereum/cmd/ && go build ./geth
 #暴露端口
 EXPOSE 8545 8546 30303 30303/udp 30304/udp
 #最终运行docker的命令
