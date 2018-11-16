@@ -562,18 +562,18 @@ func (s *PublicBlockChainAPI) GetDetail(ctx context.Context, contractAddress com
 	if state == nil || err != nil {
 		return nil, err
 	}
-	//addressType := core.GetAddressType(state.GetState(contractAddress, core.HashTypeString("type")))
+	addressType := core.GetAddressType(state.GetState(contractAddress, core.HashTypeString("type")))
 	txMap := map[string]string{
-		//"type":       addressType,
+		"type":       addressType,
 		"coinbase":   "",
 		"temAddress": "",
 	}
-	//if addressType == "contract" {
-	//	coinbase := state.GetState(contractAddress, core.HashTypeString("coinbase"))
-	//	//txMap["coinbase"] = string([]byte(coinbase)[:42])
-	//	txMap["coinbase"] = core.CommonHash2Address(coinbase).String()
-	//	txMap["temAddress"] = state.GetState(contractAddress, core.HashTypeString("template")).String()
-	//}
+	if addressType == "contract" {
+		coinbase := state.GetState(contractAddress, core.HashTypeString("coinbase"))
+		//txMap["coinbase"] = string([]byte(coinbase)[:42])
+		txMap["coinbase"] = core.CommonHash2Address(coinbase).String()
+		txMap["temAddress"] = state.GetState(contractAddress, core.HashTypeString("template")).String()
+	}
 	return txMap, nil
 }
 
