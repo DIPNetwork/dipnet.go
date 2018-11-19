@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #源镜像
 FROM golang:latest
 #作者
@@ -12,3 +13,15 @@ RUN cd /go-ethereum/cmd/geth && go build .
 EXPOSE 8545 8546 30303 30303/udp 30304/udp
 #最终运行docker的命令
 ENTRYPOINT  ["./geth"]
+=======
+# Build Gdpn
+
+FROM docker.io/golang
+
+#RUN apt-get update
+#RUN apt-get upgrade -y
+#RUN apt-get install vim-gtk
+WORKDIR /dpinet_dpos/go-ethereum
+ADD . /dpinet_dpos/go-ethereum
+EXPOSE 8545 8546 30303 30303/udp 30304/udp
+>>>>>>> a5332f9... add Dockerfile
