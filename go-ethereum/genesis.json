@@ -8,7 +8,8 @@
             "validators":[
                 "0x7f30ac5c995398e84064485842a54c3879f10de7",
                 "0x7b7d070803ade4f087f5f04a2217d99e2afc520f",
-                "0x9038d95152d52704366bb5edf2a326a93e6a7d10"
+                "0x9038d95152d52704366bb5edf2a326a93e6a7d10",
+                "0xf28203ec4ffe72e660c98cc25d21f19aabcfa798"
             ]
         }
     },
@@ -29,6 +30,10 @@
         },
         "0x9038d95152d52704366bb5edf2a326a93e6a7d10": {
             "balance": "10000000"
+        },
+        "0xf28203ec4ffe72e660c98cc25d21f19aabcfa798": {
+            "balance": "10000000"
         }
+
     }
 }
