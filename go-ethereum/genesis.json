@@ -6,8 +6,9 @@
         "byzantiumBlock":0,
         "dpos":{
             "validators":[
-                "0x725d5a0a5cceafe1a3f574a465bcc77f33dc86bc",
-                "0x7b7d070803ade4f087f5f04a2217d99e2afc520f"
+                "0x7f30ac5c995398e84064485842a54c3879f10de7",
+                "0x7b7d070803ade4f087f5f04a2217d99e2afc520f",
+                "0x9038d95152d52704366bb5edf2a326a93e6a7d10"
             ]
         }
     },
@@ -20,10 +21,13 @@
     "extraData": "0x11bbe8db4e347b4e8c937c1c8370e4b5ed33adb3db69cbdb7a38e1e50b1b82fa",
     "gasLimit": "0x500000",
     "alloc": {
-        "0x725d5a0a5cceafe1a3f574a465bcc77f33dc86bc": {
+        "0x7f30ac5c995398e84064485842a54c3879f10de7": {
             "balance": "10000000"
         },
         "0x7b7d070803ade4f087f5f04a2217d99e2afc520f": {
+            "balance": "10000000"
+        },
+        "0x9038d95152d52704366bb5edf2a326a93e6a7d10": {
             "balance": "10000000"
         }
     }
