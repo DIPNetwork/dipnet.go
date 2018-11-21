@@ -1,9 +1,13 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 #源镜像
 =======
 >>>>>>> 0a76a03... fix dockerfile
 FROM golang:latest
+=======
+FROM docker.io/golang
+>>>>>>> 6198af5... fix dockerfile
 
 ENV GOROOT /usr/local/go
 ENV GOBIN $GOROOT/bin
