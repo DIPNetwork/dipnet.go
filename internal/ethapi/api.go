@@ -1044,6 +1044,8 @@ func (s *PublicTransactionPoolAPI) GetTransactionReceipt(hash common.Hash) (map[
 		"from":              from,
 		"to":                tx.To(),
 		"gasUsed":           (*hexutil.Big)(receipt.GasUsed),
+		"gasDeveloper":      (*hexutil.Big)(receipt.GasDeveloper).ToInt(),
+		"gasMiner":          (*hexutil.Big)(receipt.GasMiner).ToInt(),
 		"cumulativeGasUsed": (*hexutil.Big)(receipt.CumulativeGasUsed),
 		"contractAddress":   nil,
 		"templateAddress":   nil,

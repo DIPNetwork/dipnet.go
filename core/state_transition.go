@@ -295,8 +295,8 @@ func (st *StateTransition) TransitionDb() (ret []byte, requiredGas, usedGas *big
 }
 
 func Layer(gas, prev, tail uint64) (gas_mine, gas_coinbase uint64) {
-	gas_mine = gas / 10 * prev
 	gas_coinbase = gas / 10 * tail
+	gas_mine = gas - gas_coinbase
 	return
 }
 

@@ -56,6 +56,8 @@ type Receipt struct {
 	ContractAddress common.Address `json:"contractAddress"`
 	TemplateAddress common.Address `json:"templateAddress"`
 	GasUsed         *big.Int       `json:"gasUsed" gencodec:"required"`
+	GasDeveloper    *big.Int       `json:"gasDeveloper" gencodec:"required"`
+	GasMiner        *big.Int       `json:"gasMiner " gencodec:"required"`
 }
 
 type receiptMarshaling struct {
@@ -63,6 +65,8 @@ type receiptMarshaling struct {
 	Status            hexutil.Uint
 	CumulativeGasUsed *hexutil.Big
 	GasUsed           *hexutil.Big
+	GasTemplate       *big.Int
+	GasMiner          *big.Int
 }
 
 // receiptRLP is the consensus encoding of a receipt.
@@ -82,6 +86,8 @@ type receiptStorageRLP struct {
 	TemplateAddress   common.Address
 	Logs              []*LogForStorage
 	GasUsed           *big.Int
+	GasDeveloper      *big.Int
+	GasMiner          *big.Int
 }
 
 // NewReceipt creates a barebone transaction receipt, copying the init fields.
@@ -161,6 +167,8 @@ func (r *ReceiptForStorage) EncodeRLP(w io.Writer) error {
 		TxHash:            r.TxHash,
 		ContractAddress:   r.ContractAddress,
 		TemplateAddress:   r.TemplateAddress,
+		GasDeveloper:      r.GasDeveloper,
+		GasMiner:          r.GasMiner,
 		Logs:              make([]*LogForStorage, len(r.Logs)),
 		GasUsed:           r.GasUsed,
 	}
@@ -187,7 +195,7 @@ func (r *ReceiptForStorage) DecodeRLP(s *rlp.Stream) error {
 		r.Logs[i] = (*Log)(log)
 	}
 	// Assign the implementation fields
-	r.TxHash, r.ContractAddress, r.GasUsed, r.TemplateAddress = dec.TxHash, dec.ContractAddress, dec.GasUsed, dec.TemplateAddress
+	r.TxHash, r.ContractAddress, r.GasUsed, r.TemplateAddress, r.GasDeveloper, r.GasMiner = dec.TxHash, dec.ContractAddress, dec.GasUsed, dec.TemplateAddress, dec.GasDeveloper, dec.GasMiner
 	return nil
 }
 
