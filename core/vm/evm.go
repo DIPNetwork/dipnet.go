@@ -17,6 +17,7 @@
 package vm
 
 import (
+	"github.com/DIPNetwork/dipnet.go/core/types"
 	"math/big"
 	"sync/atomic"
 
@@ -131,7 +132,7 @@ func (evm *EVM) Cancel() {
 // parameters. It also handles any necessary value transfer required and takes
 // the necessary steps to create accounts and reverses the state in case of an
 // execution error or failed value transfer.
-func (evm *EVM) Call(caller ContractRef, addr common.Address, input []byte, gas uint64, value *big.Int) (ret []byte, leftOverGas uint64, err error) {
+func (evm *EVM) Call(caller ContractRef, addr common.Address, input []byte, gas uint64, value *big.Int, Validators []common.Address) (ret []byte, leftOverGas uint64, err error) {
 	if evm.vmConfig.NoRecursion && evm.depth > 0 {
 		return nil, gas, nil
 	}
@@ -140,6 +141,22 @@ func (evm *EVM) Call(caller ContractRef, addr common.Address, input []byte, gas 
 	if evm.depth > int(params.CallCreateDepth) {
 		return nil, gas, ErrDepth
 	}
+
+	if len(Validators) != 0 {
+		for _, ValidatorAddress := range Validators {
+			if ValidatorAddress.Hex() == caller.Address().Hex() {
+				securityDeposit, _ := new(big.Int).SetString(types.MortgageAsset, 10)
+				//balanceAddress := new(big.Int).Sub(statedb.GetBalance(ValidatorAddress),securityDeposit)
+				balanceAddress := new(big.Int).SetBytes(evm.StateDB.GetBalance(ValidatorAddress).Bytes())
+				balanceAddress1 := new(big.Int).Sub(balanceAddress, securityDeposit)
+				accountValue := new(big.Int).SetBytes(value.Bytes())
+				if accountValue.Cmp(balanceAddress1) == 1 {
+					return nil, gas, types.ErrMortgageAsset
+				}
+			}
+		}
+	}
+
 	// Fail if we're trying to transfer more than the available balance
 	if !evm.Context.CanTransfer(evm.StateDB, caller.Address(), value) {
 		return nil, gas, ErrInsufficientBalance

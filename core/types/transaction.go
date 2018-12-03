@@ -43,12 +43,16 @@ const (
 	UnDelegate
 )
 
+const MortgageAsset = "10000000000000000000000"
+
 var (
 	ErrInvalidSig     = errors.New("invalid transaction v, r, s values")
 	errNoSigner       = errors.New("missing signing methods")
 	ErrInvalidType    = errors.New("invalid transaction type")
 	ErrInvalidAddress = errors.New("invalid transaction payload address")
 	ErrInvalidAction  = errors.New("invalid transaction payload action")
+	ErrMortgageAsset  = errors.New("mortgage assets cannot be transferred")
+	ErrCapital        = errors.New("insufficient mortgage")
 )
 
 // deriveSigner makes a *best* guess about which signer to use.
