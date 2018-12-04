@@ -59,6 +59,7 @@ type StateTransition struct {
 	data       []byte
 	state      vm.StateDB
 	evm        *vm.EVM
+	ValidatorS []common.Address
 }
 
 // Message represents a message sent to a contract.
@@ -105,7 +106,7 @@ func IntrinsicGas(data []byte, contractCreation, homestead bool) *big.Int {
 }
 
 // NewStateTransition initialises and returns a new state transition object.
-func NewStateTransition(evm *vm.EVM, msg Message, gp *GasPool) *StateTransition {
+func NewStateTransition(evm *vm.EVM, msg Message, gp *GasPool, Validators []common.Address) *StateTransition {
 	return &StateTransition{
 		gp:         gp,
 		evm:        evm,
@@ -115,6 +116,7 @@ func NewStateTransition(evm *vm.EVM, msg Message, gp *GasPool) *StateTransition 
 		value:      msg.Value(),
 		data:       msg.Data(),
 		state:      evm.StateDB,
+		ValidatorS: Validators,
 	}
 }
 
@@ -125,8 +127,8 @@ func NewStateTransition(evm *vm.EVM, msg Message, gp *GasPool) *StateTransition 
 // the gas used (which includes gas refunds) and an error if it failed. An error always
 // indicates a core error meaning that the message would always fail for that particular
 // state and would never be accepted within a block.
-func ApplyMessage(evm *vm.EVM, msg Message, gp *GasPool) ([]byte, *big.Int, bool, error) {
-	st := NewStateTransition(evm, msg, gp)
+func ApplyMessage(evm *vm.EVM, msg Message, gp *GasPool, Validators []common.Address) ([]byte, *big.Int, bool, error) {
+	st := NewStateTransition(evm, msg, gp, Validators)
 
 	ret, _, gasUsed, failed, err := st.TransitionDb()
 	return ret, gasUsed, failed, err
@@ -265,10 +267,10 @@ func (st *StateTransition) TransitionDb() (ret []byte, requiredGas, usedGas *big
 			ret, _, st.gas, vmerr = evm.Create(sender, templateCode, st.gas, st.value)
 		case "contract":
 			st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
-			ret, st.gas, vmerr = evm.Call(sender, *st.msg.To(), st.data, st.gas, st.value)
+			ret, st.gas, vmerr = evm.Call(sender, *st.msg.To(), st.data, st.gas, st.value, nil)
 		case "normal":
 			st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
-			ret, st.gas, vmerr = evm.Call(sender, *st.msg.To(), st.data, st.gas, st.value)
+			ret, st.gas, vmerr = evm.Call(sender, *st.msg.To(), st.data, st.gas, st.value, st.ValidatorS)
 		}
 	}
 	if vmerr != nil {
@@ -284,7 +286,7 @@ func (st *StateTransition) TransitionDb() (ret []byte, requiredGas, usedGas *big
 
 	st.refundGas()
 	if addressType == "contract" {
-		gas_mine, gas_coinbase := Layer(st.gasUsed().Uint64(), uint64(9), uint64(1))
+		gas_mine, gas_coinbase := Layer(st.gasUsed().Uint64(), uint64(1))
 		st.state.AddBalance(st.evm.Coinbase, new(big.Int).Mul(new(big.Int).SetUint64(gas_mine), st.gasPrice))
 		address_coinbase := CommonHash2Address(st.state.GetState(*st.msg.To(), HashTypeString("coinbase")))
 		st.state.AddBalance(address_coinbase, new(big.Int).Mul(new(big.Int).SetUint64(gas_coinbase), st.gasPrice))
@@ -294,7 +296,7 @@ func (st *StateTransition) TransitionDb() (ret []byte, requiredGas, usedGas *big
 	return ret, requiredGas, st.gasUsed(), vmerr != nil, err
 }
 
-func Layer(gas, prev, tail uint64) (gas_mine, gas_coinbase uint64) {
+func Layer(gas, tail uint64) (gas_mine, gas_coinbase uint64) {
 	gas_coinbase = gas / 10 * tail
 	gas_mine = gas - gas_coinbase
 	return

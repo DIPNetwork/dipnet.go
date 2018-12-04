@@ -98,17 +98,42 @@ func ApplyTransaction(config *params.ChainConfig, dposContext *types.DposContext
 		return nil, nil, types.ErrInvalidType
 	}
 
+	ValidatorsAddress, errGetValidator := dposContext.GetValidators()
+	if errGetValidator != nil {
+
+	}
+	//	for _,ValidatorAddress := range ValidatorsAddress{
+	//		if ValidatorAddress.Hex() == msg.From().Hex(){
+	//			securityDeposit,_:= new(big.Int).SetString(types.MortgageAsset, 10)
+	//			//balanceAddress := new(big.Int).Sub(statedb.GetBalance(ValidatorAddress),securityDeposit)
+	//			balanceAddress := new(big.Int).SetBytes(statedb.GetBalance(ValidatorAddress).Bytes())
+	//			balanceAddress1 := new(big.Int).Sub(balanceAddress,securityDeposit)
+	//			accountValue :=  new(big.Int).SetBytes(msg.Value().Bytes())
+	//			if accountValue.Cmp(balanceAddress1) == 1{
+	//				return nil,nil,types.ErrMortgageAsset
+	//			}
+	//		}
+	//	}
+	//}
 	// Create a new context to be used in the EVM environment
 	context := NewEVMContext(msg, header, bc, author)
 	// Create a new environment which holds all relevant information
 	// about the transaction and calling mechanisms.
 	vmenv := vm.NewEVM(context, statedb, config, cfg)
 	// Apply the transaction to the current state (included in the env)
-	_, gas, failed, err := ApplyMessage(vmenv, msg, gp)
+	_, gas, failed, err := ApplyMessage(vmenv, msg, gp, ValidatorsAddress)
 	if err != nil {
 		return nil, nil, err
 	}
 	if msg.Type() != types.Binary {
+
+		if msg.Type() == types.LoginCandidate {
+			securityDeposit, _ := new(big.Int).SetString(types.MortgageAsset, 10)
+			if securityDeposit.Cmp(statedb.GetBalance(msg.From())) == 1 {
+				return nil, nil, types.ErrCapital
+			}
+		}
+
 		if err = applyDposMessage(dposContext, msg); err != nil {
 			return nil, nil, err
 		}
@@ -140,7 +165,7 @@ func ApplyTransaction(config *params.ChainConfig, dposContext *types.DposContext
 		}
 
 		if addressType == "contract" {
-			gas_mine, gas_template := Layer(new(big.Int).Set(gas).Uint64(), uint64(9), uint64(1))
+			gas_mine, gas_template := Layer(new(big.Int).Set(gas).Uint64(), uint64(1))
 			receipt.GasMiner = new(big.Int).SetUint64(gas_mine)
 			receipt.GasDeveloper = new(big.Int).SetUint64(gas_template)
 		}

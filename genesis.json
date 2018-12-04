@@ -1,16 +1,13 @@
 {
     "config": {
-        "chainId": 8888,
+        "chainId": 9999,
         "eip155Block": 0,
         "eip158Block": 0,
         "byzantiumBlock":0,
         "dpos":{
             "validators":[
-                "0x7f30ac5c995398e84064485842a54c3879f10de7",
-                "0x7b7d070803ade4f087f5f04a2217d99e2afc520f",
-                "0x9038d95152d52704366bb5edf2a326a93e6a7d10",
-                "0xf28203ec4ffe72e660c98cc25d21f19aabcfa798",
-                "0x063928f5052097dab577ad2466d8a2514374c596"
+                "0x7f78db7ed704bda3ad473fd5d2bea71087e0641e",
+                "0x9b6f97b16a667f39ca965e89fa343ec5722e8687"
             ]
         }
     },
@@ -23,20 +20,11 @@
     "extraData": "0x11bbe8db4e347b4e8c937c1c8370e4b5ed33adb3db69cbdb7a38e1e50b1b82fa",
     "gasLimit": "0x2fefd8",
     "alloc": {
-        "0x7f30ac5c995398e84064485842a54c3879f10de7": {
-            "balance": "20000000000000000000"
+        "0x7f78db7ed704bda3ad473fd5d2bea71087e0641e": {
+            "balance": "2000000000000000000000000"
         },
-        "0x7b7d070803ade4f087f5f04a2217d99e2afc520f": {
-            "balance": "20000000000000000000"
-        },
-        "0x9038d95152d52704366bb5edf2a326a93e6a7d10": {
-            "balance": "20000000000000000000"
-        },
-        "0xf28203ec4ffe72e660c98cc25d21f19aabcfa798": {
-            "balance": "20000000000000000000"
-        },
-        "0x063928f5052097dab577ad2466d8a2514374c596": {
-            "balance": "20000000000000000000"
+        "0x9b6f97b16a667f39ca965e89fa343ec5722e8687": {
+            "balance": "2000000000000000000000000"
         }
     }
 }
