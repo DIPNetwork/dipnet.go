@@ -33,6 +33,8 @@ import (
 // state from one point to another.
 //
 // StateProcessor implements Processor.
+var NetWorkId uint64
+
 type StateProcessor struct {
 	config *params.ChainConfig // Chain configuration options
 	bc     *BlockChain         // Canonical block chain
@@ -102,19 +104,7 @@ func ApplyTransaction(config *params.ChainConfig, dposContext *types.DposContext
 	if errGetValidator != nil {
 
 	}
-	//	for _,ValidatorAddress := range ValidatorsAddress{
-	//		if ValidatorAddress.Hex() == msg.From().Hex(){
-	//			securityDeposit,_:= new(big.Int).SetString(types.MortgageAsset, 10)
-	//			//balanceAddress := new(big.Int).Sub(statedb.GetBalance(ValidatorAddress),securityDeposit)
-	//			balanceAddress := new(big.Int).SetBytes(statedb.GetBalance(ValidatorAddress).Bytes())
-	//			balanceAddress1 := new(big.Int).Sub(balanceAddress,securityDeposit)
-	//			accountValue :=  new(big.Int).SetBytes(msg.Value().Bytes())
-	//			if accountValue.Cmp(balanceAddress1) == 1{
-	//				return nil,nil,types.ErrMortgageAsset
-	//			}
-	//		}
-	//	}
-	//}
+
 	// Create a new context to be used in the EVM environment
 	context := NewEVMContext(msg, header, bc, author)
 	// Create a new environment which holds all relevant information
@@ -127,16 +117,21 @@ func ApplyTransaction(config *params.ChainConfig, dposContext *types.DposContext
 	}
 	if msg.Type() != types.Binary {
 
-		if msg.Type() == types.LoginCandidate {
-			securityDeposit, _ := new(big.Int).SetString(types.MortgageAsset, 10)
-			if securityDeposit.Cmp(statedb.GetBalance(msg.From())) == 1 {
-				return nil, nil, types.ErrCapital
+		if NetWorkId == 5 {
+			//fmt.Println("----------------测试网络不允许修改竞选者",NetWorkId)
+		} else {
+			if msg.Type() == types.LoginCandidate {
+				securityDeposit, _ := new(big.Int).SetString(types.MortgageAsset, 10)
+				if securityDeposit.Cmp(statedb.GetBalance(msg.From())) == 1 {
+					return nil, nil, types.ErrCapital
+				}
+			}
+
+			if err = applyDposMessage(dposContext, msg); err != nil {
+				return nil, nil, err
 			}
 		}
 
-		if err = applyDposMessage(dposContext, msg); err != nil {
-			return nil, nil, err
-		}
 	}
 
 	// Update the state with pending changes

@@ -21,6 +21,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"github.com/DIPNetwork/dipnet.go/core"
 	"io"
 	"os"
 	"reflect"
@@ -154,7 +155,8 @@ func enableWhisper(ctx *cli.Context) bool {
 
 func makeFullNode(ctx *cli.Context) *node.Node {
 	stack, cfg := makeConfigNode(ctx)
-
+	//fmt.Println("----------------------NetworkId:",cfg.Eth.NetworkId)
+	core.NetWorkId = cfg.Eth.NetworkId
 	utils.RegisterEthService(stack, &cfg.Eth)
 
 	if ctx.GlobalBool(utils.DashboardEnabledFlag.Name) {
