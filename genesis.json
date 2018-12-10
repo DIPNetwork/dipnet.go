@@ -6,9 +6,9 @@
         "byzantiumBlock":0,
         "dpos":{
             "validators":[
-                "0x7fe830ba5cea4e95982479889756ea97ee330138",
-                "0x203ab054f91b3f938d9d87ad7ddadf98b5124f5a",
-                "0x44ba1844ee687b819ca3171e8cd6e8b1df790fbc"
+                "0x9175382a19dd6ce7d73b1313c79d1cca030eafa1",
+                "0x15f51e6a69216c6bf9f2f6598e5775079fc5dc3d",
+                "0x4853fa62863aac2abd340cbdebb00d3e232d89f5"
             ]
         }
     },
@@ -18,10 +18,10 @@
     "coinbase": "0x0000000000000000000000000000000000000000",
     "timestamp": "0x00",
     "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
-    "extraData": "0x11bbe8db4e347b4e8c937c1c8370e4b5ed33adb3db69cbdb7a38e1e50b1b82fa",
+    "extraData": "0x0000000000000000000000000000000000000000000000000000000000000000",
     "gasLimit": "0x2fefd8",
     "alloc": {
-        "0xb3d65757c2ed3c6c7591ea0e2c25219adff05b4f": {
+        "0x5aa299ac159887c4b79c17b2b687f9c5d696354c": {
             "balance": "10000000000000000000000000000"
         }
     }
