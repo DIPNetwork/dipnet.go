@@ -643,7 +643,7 @@ func (s *PublicBlockChainAPI) GetSourceTx(ctx context.Context, address common.Ad
 
 	data := make(map[string]interface{}, 3)
 
-	sourcelength := state.GetState(address, core.HashTypeString("sourcelength"))
+	sourcelength := state.GetState(address, core.HashTypeString("txsourcelength"))
 	if sourcelength == (common.Hash{}) {
 		data["successful"] = false
 		data["sourceLength"] = 0
@@ -651,22 +651,7 @@ func (s *PublicBlockChainAPI) GetSourceTx(ctx context.Context, address common.Ad
 	} else {
 		one, _ := new(big.Int).SetString("1", 10)
 		data["successful"] = true
-		length := sourcelength.Big().Int64()
-		data["sourceListLength"] = length
-		sourcetag := state.GetState(address, core.HashTypeString("sourcetag")).Big()
-		sourcetag.Add(sourcetag, sourcelength.Big())
-		st := make([]string, 0)
-		for i := length; i > 0; i-- {
-			Data := state.GetState(address, common.BigToHash(sourcetag))
-			st = append(st, Data.String())
-			if i == length {
-				data["sourceCodelatestRecorder"] = Data
-			}
-			sourcetag.Sub(sourcetag, one)
-		}
-		data["sourceCodeList"] = st
-
-		sourceTxLength := state.GetState(address, core.HashTypeString("txsourcelength")).Big()
+		sourceTxLength := sourcelength.Big()
 		lengthTx := sourceTxLength.Int64()
 		data["sourceTxLength"] = lengthTx
 
