@@ -17,13 +17,14 @@
 package vm
 
 import (
-	"github.com/DIPNetwork/dipnet.go/core/types"
-	"math/big"
-	"sync/atomic"
-
+	"fmt"
 	"github.com/DIPNetwork/dipnet.go/common"
+	"github.com/DIPNetwork/dipnet.go/core/types"
 	"github.com/DIPNetwork/dipnet.go/crypto"
 	"github.com/DIPNetwork/dipnet.go/params"
+	"math/big"
+	"strconv"
+	"sync/atomic"
 )
 
 // emptyCodeHash is used by create to ensure deployment is disallowed to already
@@ -458,4 +459,175 @@ func (evm *EVM) Template(caller ContractRef, code []byte, gas uint64, value *big
 	evm.StateDB.SetCode(contractAddr, codePrev)
 
 	return ret, contractAddr, contract.Gas, err
+}
+
+//Endorsement transaction
+func (evm *EVM) Endorse(caller ContractRef, addr common.Address, input []byte, gas uint64, value *big.Int, Validators []common.Address, txhash common.Hash) (ret []byte, leftOverGas uint64, err error) {
+	if evm.vmConfig.NoRecursion && evm.depth > 0 {
+		return nil, gas, nil
+	}
+
+	// Fail if we're trying to execute above the call depth limit
+	if evm.depth > int(params.CallCreateDepth) {
+		return nil, gas, ErrDepth
+	}
+
+	// Fail if we're trying to transfer more than the available balance
+	if !evm.Context.CanTransfer(evm.StateDB, caller.Address(), value) {
+		return nil, gas, ErrInsufficientBalance
+	}
+
+	var (
+		to = AccountRef(addr)
+	)
+	if !evm.StateDB.Exist(addr) {
+		precompiles := PrecompiledContractsHomestead
+		if evm.ChainConfig().IsByzantium(evm.BlockNumber) {
+			precompiles = PrecompiledContractsByzantium
+		}
+		if precompiles[addr] == nil && evm.ChainConfig().IsEIP158(evm.BlockNumber) && value.Sign() == 0 {
+			return nil, gas, nil
+		}
+		evm.StateDB.CreateAccount(addr)
+	}
+	evm.Transfer(evm.StateDB, caller.Address(), to.Address(), value)
+
+	endorselength := evm.StateDB.GetState(addr, hashType("endorselength"))
+	if endorselength == (common.Hash{}) {
+
+		endorseLen, _ := new(big.Int).SetString("2", 10)
+		//endorselength++
+		evm.StateDB.SetState(addr, hashType("endorselength"), common.BigToHash(endorseLen))
+		muls, _ := new(big.Int).SetString("10000000", 10)
+		endorseLen.Mul(endorseLen, muls)
+		one, _ := new(big.Int).SetString("1", 10)
+		//save tx => tag
+		evm.StateDB.SetState(addr, common.BytesToHash(input), common.BigToHash(endorseLen))
+		//taglength++
+		evm.StateDB.SetState(addr, hashType(endorseLen.String()+"length"), common.BigToHash(one))
+		//tag? => txhash
+		endorseLen.Add(endorseLen, one)
+		evm.StateDB.SetState(addr, common.BigToHash(endorseLen), txhash)
+
+	} else {
+		lenEndorse, _ := strconv.ParseInt(endorselength.Big().String(), 10, 0)
+		endorsetag := evm.StateDB.GetState(addr, common.BytesToHash(input))
+		if endorsetag == (common.Hash{}) {
+			lenEndorse += 1
+			endorseLen, _ := new(big.Int).SetString(fmt.Sprintf("%d", lenEndorse), 10)
+			//endorselength++
+			evm.StateDB.SetState(addr, hashType("endorselength"), common.BigToHash(endorseLen))
+			muls, _ := new(big.Int).SetString("10000000", 10)
+			endorseLen.Mul(endorseLen, muls)
+			one, _ := new(big.Int).SetString("1", 10)
+			//save tx => tag
+			evm.StateDB.SetState(addr, common.BytesToHash(input), common.BigToHash(endorseLen))
+			//taglength++
+			evm.StateDB.SetState(addr, hashType(endorseLen.String()+"length"), common.BigToHash(one))
+			//tag? => txhash
+			endorseLen.Add(endorseLen, one)
+			evm.StateDB.SetState(addr, common.BigToHash(endorseLen), txhash)
+		} else {
+			tagTx := evm.StateDB.GetState(addr, common.BytesToHash(input)).Big()
+			lengthHash := tagTx.String() + "length"
+			taglen := evm.StateDB.GetState(addr, hashType(lengthHash)).Big()
+			one, _ := new(big.Int).SetString("1", 10)
+			taglen.Add(taglen, one)
+			evm.StateDB.SetState(addr, hashType(lengthHash), common.BigToHash(taglen))
+
+			tagTx.Add(tagTx, taglen)
+			evm.StateDB.SetState(addr, common.BigToHash(tagTx), txhash)
+		}
+
+	}
+
+	return ret, gas, err
+}
+
+//Execute source chain transactions
+func (evm *EVM) SourceCode(caller ContractRef, addr common.Address, input []byte, gas uint64, value *big.Int, Validators []common.Address, txhash common.Hash) (ret []byte, leftOverGas uint64, err error) {
+	if evm.vmConfig.NoRecursion && evm.depth > 0 {
+		return nil, gas, nil
+	}
+
+	// Fail if we're trying to execute above the call depth limit
+	if evm.depth > int(params.CallCreateDepth) {
+		return nil, gas, ErrDepth
+	}
+
+	// Fail if we're trying to transfer more than the available balance
+	if !evm.Context.CanTransfer(evm.StateDB, caller.Address(), value) {
+		return nil, gas, ErrInsufficientBalance
+	}
+
+	var (
+		to = AccountRef(addr)
+	)
+	if !evm.StateDB.Exist(addr) {
+		precompiles := PrecompiledContractsHomestead
+		if evm.ChainConfig().IsByzantium(evm.BlockNumber) {
+			precompiles = PrecompiledContractsByzantium
+		}
+		if precompiles[addr] == nil && evm.ChainConfig().IsEIP158(evm.BlockNumber) && value.Sign() == 0 {
+			return nil, gas, nil
+		}
+		evm.StateDB.CreateAccount(addr)
+	}
+	evm.Transfer(evm.StateDB, caller.Address(), to.Address(), value)
+
+	sourcelength := evm.StateDB.GetState(addr, hashType("sourcelength"))
+	if sourcelength == (common.Hash{}) {
+
+		sourceLen, _ := new(big.Int).SetString("1", 10)
+		//save sourceLength
+		evm.StateDB.SetState(addr, hashType("sourcelength"), common.BigToHash(sourceLen))
+		muls, _ := new(big.Int).SetString("10000000", 10)
+		one, _ := new(big.Int).SetString("1", 10)
+		//save sourceTag => tag
+		evm.StateDB.SetState(addr, hashType("sourcetag"), common.BigToHash(muls))
+
+		//tag++ and save data
+		muls.Add(muls, one)
+		evm.StateDB.SetState(addr, common.BigToHash(muls), common.BytesToHash(input))
+
+		txSourceLen, _ := new(big.Int).SetString("1", 10)
+		//save txSourceLength
+		evm.StateDB.SetState(addr, hashType("txsourcelength"), common.BigToHash(txSourceLen))
+
+		txmuls, _ := new(big.Int).SetString("10000000", 10)
+		txone, _ := new(big.Int).SetString("1", 10)
+
+		//save txSourceTag => tag
+		evm.StateDB.SetState(addr, hashType("txsourcetag"), common.BigToHash(txmuls))
+
+		//tag++ and save sourceTxHash
+		txmuls.Add(txmuls, txone)
+		evm.StateDB.SetState(addr, common.BigToHash(txmuls), txhash)
+
+	} else {
+		sourcelen := sourcelength.Big()
+		one, _ := new(big.Int).SetString("1", 10)
+		sourcelen.Add(sourcelen, one)
+		//save sourceLength
+		evm.StateDB.SetState(addr, hashType("sourcelength"), common.BigToHash(sourcelen))
+
+		sourcetag := evm.StateDB.GetState(addr, hashType("sourcetag")).Big()
+		sourcetag.Add(sourcetag, sourcelen)
+
+		//tag++ and save data
+		evm.StateDB.SetState(addr, common.BigToHash(sourcetag), common.BytesToHash(input))
+
+		txSounrceLength := evm.StateDB.GetState(addr, hashType("txsourcelength")).Big()
+		txSounrceLength.Add(txSounrceLength, one)
+		//save txSourceLength
+		evm.StateDB.SetState(addr, hashType("txsourcelength"), common.BigToHash(txSounrceLength))
+
+		txSounrceTAG := evm.StateDB.GetState(addr, hashType("txsourcetag")).Big()
+		txSounrceTAG.Add(txSounrceTAG, txSounrceLength)
+
+		evm.StateDB.SetState(addr, common.BigToHash(txSounrceTAG), txhash)
+
+	}
+
+	return ret, gas, err
 }

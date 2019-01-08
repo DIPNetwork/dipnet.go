@@ -58,6 +58,7 @@ type Receipt struct {
 	GasUsed         *big.Int       `json:"gasUsed" gencodec:"required"`
 	GasDeveloper    *big.Int       `json:"gasDeveloper" gencodec:"required"`
 	GasMiner        *big.Int       `json:"gasMiner " gencodec:"required"`
+	TxType          string         `json:"TxType"`
 }
 
 type receiptMarshaling struct {
@@ -84,6 +85,7 @@ type receiptStorageRLP struct {
 	TxHash            common.Hash
 	ContractAddress   common.Address
 	TemplateAddress   common.Address
+	TxType            string
 	Logs              []*LogForStorage
 	GasUsed           *big.Int
 	GasDeveloper      *big.Int
@@ -171,6 +173,7 @@ func (r *ReceiptForStorage) EncodeRLP(w io.Writer) error {
 		GasMiner:          r.GasMiner,
 		Logs:              make([]*LogForStorage, len(r.Logs)),
 		GasUsed:           r.GasUsed,
+		TxType:            r.TxType,
 	}
 	for i, log := range r.Logs {
 		enc.Logs[i] = (*LogForStorage)(log)
@@ -195,7 +198,7 @@ func (r *ReceiptForStorage) DecodeRLP(s *rlp.Stream) error {
 		r.Logs[i] = (*Log)(log)
 	}
 	// Assign the implementation fields
-	r.TxHash, r.ContractAddress, r.GasUsed, r.TemplateAddress, r.GasDeveloper, r.GasMiner = dec.TxHash, dec.ContractAddress, dec.GasUsed, dec.TemplateAddress, dec.GasDeveloper, dec.GasMiner
+	r.TxHash, r.ContractAddress, r.GasUsed, r.TemplateAddress, r.GasDeveloper, r.GasMiner, r.TxType = dec.TxHash, dec.ContractAddress, dec.GasUsed, dec.TemplateAddress, dec.GasDeveloper, dec.GasMiner, dec.TxType
 	return nil
 }
 

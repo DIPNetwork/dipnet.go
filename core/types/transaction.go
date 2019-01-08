@@ -41,6 +41,8 @@ const (
 	LogoutCandidate
 	Delegate
 	UnDelegate
+	SourceCode
+	Endorse
 )
 
 const MortgageAsset = "10000000000000000000000"
@@ -157,9 +159,9 @@ func (tx *Transaction) Validate() error {
 		if tx.To() == nil && tx.Type() != LoginCandidate && tx.Type() != LogoutCandidate {
 			return errors.New("receipient was required")
 		}
-		if tx.Data() != nil {
-			return errors.New("payload should be empty")
-		}
+		//if tx.Data() != nil {
+		//	return errors.New("payload should be empty")
+		//}
 	}
 	return nil
 }

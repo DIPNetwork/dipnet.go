@@ -581,6 +581,114 @@ func (s *PublicBlockChainAPI) GetDetail(ctx context.Context, contractAddress com
 	return txMap, nil
 }
 
+//Obtain endorsement transaction information
+func (s *PublicBlockChainAPI) GetEndorse(ctx context.Context, ddress common.Address, txhash common.Hash, blockNr rpc.BlockNumber) (map[string]interface{}, error) {
+	state, _, err := s.b.StateAndHeaderByNumber(ctx, blockNr)
+	if state == nil || err != nil {
+		return nil, err
+	}
+
+	data := make(map[string]interface{}, 3)
+
+	data["tx"] = txhash.String()
+
+	endorseLength := state.GetState(ddress, core.HashTypeString("endorselength"))
+	if endorseLength == (common.Hash{}) {
+		data["successful"] = false
+		data["endorseLength"] = 0
+		return data, nil
+	} else {
+		tag := state.GetState(ddress, txhash)
+		if tag == (common.Hash{}) {
+			data["successful"] = false
+			data["endorseLength"] = 0
+			return data, nil
+		} else {
+			one, _ := new(big.Int).SetString("1", 10)
+			st := tag.Big().String() + "length"
+			taglength := state.GetState(ddress, core.HashTypeString(st)).Big()
+			if taglength.Cmp(one) == -1 {
+				data["successful"] = false
+				data["endorseLength"] = 0
+				return data, nil
+			} else {
+				st := make([]string, 0)
+				data["successful"] = true
+				lengthTAG := taglength.Int64()
+				data["endorseLength"] = lengthTAG
+				tagSorce := tag.Big()
+				index := new(big.Int).SetInt64(lengthTAG)
+				tagSorce.Add(tagSorce, index)
+				for i := lengthTAG; i > 0; i-- {
+					txData := state.GetState(ddress, common.BigToHash(tagSorce))
+					st = append(st, txData.String())
+					tagSorce.Sub(tagSorce, one)
+				}
+				data["endorseTxList"] = st
+			}
+
+		}
+
+	}
+
+	return data, nil
+}
+
+//Obtain source chain transaction information
+func (s *PublicBlockChainAPI) GetSourceTx(ctx context.Context, address common.Address, blockNr rpc.BlockNumber) (map[string]interface{}, error) {
+	state, _, err := s.b.StateAndHeaderByNumber(ctx, blockNr)
+	if state == nil || err != nil {
+		return nil, err
+	}
+
+	data := make(map[string]interface{}, 3)
+
+	sourcelength := state.GetState(address, core.HashTypeString("sourcelength"))
+	if sourcelength == (common.Hash{}) {
+		data["successful"] = false
+		data["sourceLength"] = 0
+		return data, nil
+	} else {
+		one, _ := new(big.Int).SetString("1", 10)
+		data["successful"] = true
+		length := sourcelength.Big().Int64()
+		data["sourceListLength"] = length
+		sourcetag := state.GetState(address, core.HashTypeString("sourcetag")).Big()
+		sourcetag.Add(sourcetag, sourcelength.Big())
+		st := make([]string, 0)
+		for i := length; i > 0; i-- {
+			Data := state.GetState(address, common.BigToHash(sourcetag))
+			st = append(st, Data.String())
+			if i == length {
+				data["sourceCodelatestRecorder"] = Data
+			}
+			sourcetag.Sub(sourcetag, one)
+		}
+		data["sourceCodeList"] = st
+
+		sourceTxLength := state.GetState(address, core.HashTypeString("txsourcelength")).Big()
+		lengthTx := sourceTxLength.Int64()
+		data["sourceTxLength"] = lengthTx
+
+		sourceTxTAG := state.GetState(address, core.HashTypeString("txsourcetag")).Big()
+		sourceTxTAG.Add(sourceTxTAG, sourceTxLength)
+		strs := make([]string, 0)
+		for j := lengthTx; j > 0; j-- {
+			Data := state.GetState(address, common.BigToHash(sourceTxTAG))
+			strs = append(strs, Data.String())
+			if j == lengthTx {
+				data["sourceTxlatestRecorder"] = Data
+			}
+			sourceTxTAG.Sub(sourceTxTAG, one)
+		}
+
+		data["sourceTxList"] = strs
+
+	}
+
+	return data, nil
+}
+
 // GetStorageAt returns the storage from the state at the given address, key and
 // block number. The rpc.LatestBlockNumber and rpc.PendingBlockNumber meta block
 // numbers are also allowed.
@@ -658,7 +766,7 @@ func (s *PublicBlockChainAPI) doCall(ctx context.Context, args CallArgs, blockNr
 	// Setup the gas pool (also for unmetered requests)
 	// and apply the message.
 	gp := new(core.GasPool).AddGas(math.MaxBig256)
-	res, gas, failed, err := core.ApplyMessage(evm, msg, gp, nil)
+	res, gas, failed, err := core.ApplyMessage(evm, msg, gp, nil, nil, 0)
 	if err := vmError(); err != nil {
 		return nil, common.Big0, false, err
 	}
@@ -1053,6 +1161,7 @@ func (s *PublicTransactionPoolAPI) GetTransactionReceipt(hash common.Hash) (map[
 		"cumulativeGasUsed": (*hexutil.Big)(receipt.CumulativeGasUsed),
 		"contractAddress":   nil,
 		"templateAddress":   nil,
+		"txType":            "",
 		"logs":              receipt.Logs,
 		"logsBloom":         receipt.Bloom,
 	}
@@ -1066,6 +1175,9 @@ func (s *PublicTransactionPoolAPI) GetTransactionReceipt(hash common.Hash) (map[
 	if receipt.Logs == nil {
 		fields["logs"] = [][]*types.Log{}
 	}
+
+	fields["txType"] = receipt.TxType
+
 	// If the ContractAddress is 20 0x0 bytes, assume it is not a contract creation
 	if receipt.ContractAddress != (common.Address{}) {
 		fields["contractAddress"] = receipt.ContractAddress

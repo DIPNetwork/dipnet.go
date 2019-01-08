@@ -18,6 +18,7 @@ package core
 
 import (
 	"errors"
+	"github.com/DIPNetwork/dipnet.go/core/types"
 	"math/big"
 
 	"github.com/DIPNetwork/dipnet.go/common"
@@ -60,6 +61,8 @@ type StateTransition struct {
 	state      vm.StateDB
 	evm        *vm.EVM
 	ValidatorS []common.Address
+	txType     types.TxType
+	txHash     []byte
 }
 
 // Message represents a message sent to a contract.
@@ -106,7 +109,7 @@ func IntrinsicGas(data []byte, contractCreation, homestead bool) *big.Int {
 }
 
 // NewStateTransition initialises and returns a new state transition object.
-func NewStateTransition(evm *vm.EVM, msg Message, gp *GasPool, Validators []common.Address) *StateTransition {
+func NewStateTransition(evm *vm.EVM, msg Message, gp *GasPool, Validators []common.Address, tx []byte, txtype types.TxType) *StateTransition {
 	return &StateTransition{
 		gp:         gp,
 		evm:        evm,
@@ -117,6 +120,8 @@ func NewStateTransition(evm *vm.EVM, msg Message, gp *GasPool, Validators []comm
 		data:       msg.Data(),
 		state:      evm.StateDB,
 		ValidatorS: Validators,
+		txType:     txtype,
+		txHash:     tx,
 	}
 }
 
@@ -127,8 +132,8 @@ func NewStateTransition(evm *vm.EVM, msg Message, gp *GasPool, Validators []comm
 // the gas used (which includes gas refunds) and an error if it failed. An error always
 // indicates a core error meaning that the message would always fail for that particular
 // state and would never be accepted within a block.
-func ApplyMessage(evm *vm.EVM, msg Message, gp *GasPool, Validators []common.Address) ([]byte, *big.Int, bool, error) {
-	st := NewStateTransition(evm, msg, gp, Validators)
+func ApplyMessage(evm *vm.EVM, msg Message, gp *GasPool, Validators []common.Address, txhash []byte, txtype types.TxType) ([]byte, *big.Int, bool, error) {
+	st := NewStateTransition(evm, msg, gp, Validators, txhash, txtype)
 
 	ret, _, gasUsed, failed, err := st.TransitionDb()
 	return ret, gasUsed, failed, err
@@ -257,14 +262,25 @@ func (st *StateTransition) TransitionDb() (ret []byte, requiredGas, usedGas *big
 		// Increment the nonce for the next transaction
 		switch addressType {
 		case "template":
-			templateCode := st.state.GetCode(*st.msg.To())
-			if len(st.data) > 0 {
-				templateCode = ByteAndByte(templateCode, st.data)
+
+			if st.txType == types.Binary {
+				templateCode := st.state.GetCode(*st.msg.To())
+				if len(st.data) > 0 {
+					templateCode = ByteAndByte(templateCode, st.data)
+				}
+				coinbase := st.state.GetState(*st.msg.To(), HashTypeString("coinbase"))
+				templateCode = byteAppend(templateCode, coinbase)
+				templateCode = byteAppendAddress(templateCode, *msg.To())
+				ret, _, st.gas, vmerr = evm.Create(sender, templateCode, st.gas, st.value)
+			} else if st.txType == types.SourceCode {
+				st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
+				ret, st.gas, vmerr = evm.SourceCode(sender, *st.msg.To(), st.data, st.gas, st.value, nil, common.BytesToHash(st.txHash))
+			} else if st.txType == types.Endorse {
+				st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
+				ret, st.gas, vmerr = evm.Endorse(sender, *st.msg.To(), st.data, st.gas, st.value, nil, common.BytesToHash(st.txHash))
+			} else {
+				return nil, nil, nil, false, nil
 			}
-			coinbase := st.state.GetState(*st.msg.To(), HashTypeString("coinbase"))
-			templateCode = byteAppend(templateCode, coinbase)
-			templateCode = byteAppendAddress(templateCode, *msg.To())
-			ret, _, st.gas, vmerr = evm.Create(sender, templateCode, st.gas, st.value)
 		case "contract":
 			st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
 			ret, st.gas, vmerr = evm.Call(sender, *st.msg.To(), st.data, st.gas, st.value, nil)
