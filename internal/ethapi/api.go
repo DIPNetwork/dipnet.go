@@ -581,6 +581,58 @@ func (s *PublicBlockChainAPI) GetDetail(ctx context.Context, contractAddress com
 	return txMap, nil
 }
 
+func (s *PublicBlockChainAPI) GetEndorse(ctx context.Context, ddress common.Address, txhash common.Hash, blockNr rpc.BlockNumber) (map[string]interface{}, error) {
+	state, _, err := s.b.StateAndHeaderByNumber(ctx, blockNr)
+	if state == nil || err != nil {
+		return nil, err
+	}
+
+	data := make(map[string]interface{}, 3)
+
+	data["tx"] = txhash.String()
+
+	endorseLength := state.GetState(ddress, core.HashTypeString("endorselength"))
+	if endorseLength == (common.Hash{}) {
+		data["successful"] = false
+		data["endorseLength"] = 0
+		return data, nil
+	} else {
+		tag := state.GetState(ddress, txhash)
+		if tag == (common.Hash{}) {
+			data["successful"] = false
+			data["endorseLength"] = 0
+			return data, nil
+		} else {
+			one, _ := new(big.Int).SetString("1", 10)
+			st := tag.Big().String() + "length"
+			taglength := state.GetState(ddress, core.HashTypeString(st)).Big()
+			if taglength.Cmp(one) == -1 {
+				data["successful"] = false
+				data["endorseLength"] = 0
+				return data, nil
+			} else {
+				st := make([]string, 0)
+				data["successful"] = true
+				lengthTAG := taglength.Int64()
+				data["endorseLength"] = lengthTAG
+				tagSorce := tag.Big()
+				index := new(big.Int).SetInt64(lengthTAG)
+				tagSorce.Add(tagSorce, index)
+				for i := lengthTAG; i > 0; i-- {
+					txData := state.GetState(ddress, common.BigToHash(tagSorce))
+					st = append(st, txData.String())
+					tagSorce.Sub(tagSorce, one)
+				}
+				data["endorseTxList"] = st
+			}
+
+		}
+
+	}
+
+	return data, nil
+}
+
 // GetStorageAt returns the storage from the state at the given address, key and
 // block number. The rpc.LatestBlockNumber and rpc.PendingBlockNumber meta block
 // numbers are also allowed.
@@ -658,7 +710,7 @@ func (s *PublicBlockChainAPI) doCall(ctx context.Context, args CallArgs, blockNr
 	// Setup the gas pool (also for unmetered requests)
 	// and apply the message.
 	gp := new(core.GasPool).AddGas(math.MaxBig256)
-	res, gas, failed, err := core.ApplyMessage(evm, msg, gp, nil)
+	res, gas, failed, err := core.ApplyMessage(evm, msg, gp, nil, nil, 0)
 	if err := vmError(); err != nil {
 		return nil, common.Big0, false, err
 	}
@@ -1053,6 +1105,7 @@ func (s *PublicTransactionPoolAPI) GetTransactionReceipt(hash common.Hash) (map[
 		"cumulativeGasUsed": (*hexutil.Big)(receipt.CumulativeGasUsed),
 		"contractAddress":   nil,
 		"templateAddress":   nil,
+		"txType":            "",
 		"logs":              receipt.Logs,
 		"logsBloom":         receipt.Bloom,
 	}
@@ -1066,6 +1119,9 @@ func (s *PublicTransactionPoolAPI) GetTransactionReceipt(hash common.Hash) (map[
 	if receipt.Logs == nil {
 		fields["logs"] = [][]*types.Log{}
 	}
+
+	fields["txType"] = receipt.TxType
+
 	// If the ContractAddress is 20 0x0 bytes, assume it is not a contract creation
 	if receipt.ContractAddress != (common.Address{}) {
 		fields["contractAddress"] = receipt.ContractAddress

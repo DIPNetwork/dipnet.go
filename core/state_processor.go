@@ -111,11 +111,11 @@ func ApplyTransaction(config *params.ChainConfig, dposContext *types.DposContext
 	// about the transaction and calling mechanisms.
 	vmenv := vm.NewEVM(context, statedb, config, cfg)
 	// Apply the transaction to the current state (included in the env)
-	_, gas, failed, err := ApplyMessage(vmenv, msg, gp, ValidatorsAddress)
+	_, gas, failed, err := ApplyMessage(vmenv, msg, gp, ValidatorsAddress, tx.Hash().Bytes(), msg.Type())
 	if err != nil {
 		return nil, nil, err
 	}
-	if msg.Type() != types.Binary {
+	if msg.Type() == types.LoginCandidate || msg.Type() == types.LogoutCandidate || msg.Type() == types.Delegate || msg.Type() == types.UnDelegate {
 
 		if NetWorkId == 5 {
 			//fmt.Println("----------------测试网络不允许修改竞选者",NetWorkId)
@@ -152,17 +152,48 @@ func ApplyTransaction(config *params.ChainConfig, dposContext *types.DposContext
 	if msg.To() == nil {
 		receipt.TemplateAddress = crypto.CreateAddress(vmenv.Context.Origin, tx.Nonce())
 		receipt.GasMiner = new(big.Int).Set(gas)
+		receipt.TxType = "DeployTemplate"
 	} else {
 		addressType := GetAddressType(vmenv.StateDB.GetState(*msg.To(), HashTypeString("type")))
 		if addressType == "template" {
-			receipt.ContractAddress = crypto.CreateAddress(vmenv.Context.Origin, tx.Nonce())
-			receipt.GasMiner = new(big.Int).Set(gas)
+
+			switch msg.Type() {
+			case types.Binary:
+				receipt.ContractAddress = crypto.CreateAddress(vmenv.Context.Origin, tx.Nonce())
+				receipt.GasMiner = new(big.Int).Set(gas)
+				receipt.TxType = "DeployContract"
+			case types.SourceCode:
+				receipt.TxType = "sourceCode"
+			case types.Endorse:
+				receipt.TxType = "endorse"
+			default:
+				receipt.TxType = "normal"
+			}
+
 		}
 
 		if addressType == "contract" {
 			gas_mine, gas_template := Layer(new(big.Int).Set(gas).Uint64(), uint64(1))
 			receipt.GasMiner = new(big.Int).SetUint64(gas_mine)
 			receipt.GasDeveloper = new(big.Int).SetUint64(gas_template)
+			receipt.TxType = "CallContract"
+		}
+
+		if addressType == "normal" {
+			switch msg.Type() {
+			case types.Binary:
+				receipt.TxType = "normal"
+			case types.LoginCandidate:
+				receipt.TxType = "LoginCandidate"
+			case types.LogoutCandidate:
+				receipt.TxType = "LogoutCandidate"
+			case types.Delegate:
+				receipt.TxType = "Delegate"
+			case types.UnDelegate:
+				receipt.TxType = "UnDelegate"
+			default:
+				receipt.TxType = "normal"
+			}
 		}
 	}
 
