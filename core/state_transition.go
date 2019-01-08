@@ -273,12 +273,13 @@ func (st *StateTransition) TransitionDb() (ret []byte, requiredGas, usedGas *big
 				templateCode = byteAppendAddress(templateCode, *msg.To())
 				ret, _, st.gas, vmerr = evm.Create(sender, templateCode, st.gas, st.value)
 			} else if st.txType == types.SourceCode {
-
+				st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
+				ret, st.gas, vmerr = evm.SourceCode(sender, *st.msg.To(), st.data, st.gas, st.value, nil, common.BytesToHash(st.txHash))
 			} else if st.txType == types.Endorse {
 				st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
 				ret, st.gas, vmerr = evm.Endorse(sender, *st.msg.To(), st.data, st.gas, st.value, nil, common.BytesToHash(st.txHash))
 			} else {
-
+				return nil, nil, nil, false, nil
 			}
 		case "contract":
 			st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)

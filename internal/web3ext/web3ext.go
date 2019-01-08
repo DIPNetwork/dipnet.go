@@ -413,6 +413,11 @@ web3._extend({
 			params: 3,
 		}),
 		new web3._extend.Method({
+			name: 'getSourceTx',
+			call: 'eth_getSourceTx',
+			params: 2,
+		}),
+		new web3._extend.Method({
 			name: 'resend',
 			call: 'eth_resend',
 			params: 3,

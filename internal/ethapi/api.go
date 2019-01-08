@@ -581,6 +581,7 @@ func (s *PublicBlockChainAPI) GetDetail(ctx context.Context, contractAddress com
 	return txMap, nil
 }
 
+//Obtain endorsement transaction information
 func (s *PublicBlockChainAPI) GetEndorse(ctx context.Context, ddress common.Address, txhash common.Hash, blockNr rpc.BlockNumber) (map[string]interface{}, error) {
 	state, _, err := s.b.StateAndHeaderByNumber(ctx, blockNr)
 	if state == nil || err != nil {
@@ -627,6 +628,61 @@ func (s *PublicBlockChainAPI) GetEndorse(ctx context.Context, ddress common.Addr
 			}
 
 		}
+
+	}
+
+	return data, nil
+}
+
+//Obtain source chain transaction information
+func (s *PublicBlockChainAPI) GetSourceTx(ctx context.Context, address common.Address, blockNr rpc.BlockNumber) (map[string]interface{}, error) {
+	state, _, err := s.b.StateAndHeaderByNumber(ctx, blockNr)
+	if state == nil || err != nil {
+		return nil, err
+	}
+
+	data := make(map[string]interface{}, 3)
+
+	sourcelength := state.GetState(address, core.HashTypeString("sourcelength"))
+	if sourcelength == (common.Hash{}) {
+		data["successful"] = false
+		data["sourceLength"] = 0
+		return data, nil
+	} else {
+		one, _ := new(big.Int).SetString("1", 10)
+		data["successful"] = true
+		length := sourcelength.Big().Int64()
+		data["sourceListLength"] = length
+		sourcetag := state.GetState(address, core.HashTypeString("sourcetag")).Big()
+		sourcetag.Add(sourcetag, sourcelength.Big())
+		st := make([]string, 0)
+		for i := length; i > 0; i-- {
+			Data := state.GetState(address, common.BigToHash(sourcetag))
+			st = append(st, Data.String())
+			if i == length {
+				data["sourceCodelatestRecorder"] = Data
+			}
+			sourcetag.Sub(sourcetag, one)
+		}
+		data["sourceCodeList"] = st
+
+		sourceTxLength := state.GetState(address, core.HashTypeString("txsourcelength")).Big()
+		lengthTx := sourceTxLength.Int64()
+		data["sourceTxLength"] = lengthTx
+
+		sourceTxTAG := state.GetState(address, core.HashTypeString("txsourcetag")).Big()
+		sourceTxTAG.Add(sourceTxTAG, sourceTxLength)
+		strs := make([]string, 0)
+		for j := lengthTx; j > 0; j-- {
+			Data := state.GetState(address, common.BigToHash(sourceTxTAG))
+			strs = append(strs, Data.String())
+			if j == lengthTx {
+				data["sourceTxlatestRecorder"] = Data
+			}
+			sourceTxTAG.Sub(sourceTxTAG, one)
+		}
+
+		data["sourceTxList"] = strs
 
 	}
 
