@@ -575,20 +575,8 @@ func (evm *EVM) SourceCode(caller ContractRef, addr common.Address, input []byte
 	}
 	evm.Transfer(evm.StateDB, caller.Address(), to.Address(), value)
 
-	sourcelength := evm.StateDB.GetState(addr, hashType("sourcelength"))
+	sourcelength := evm.StateDB.GetState(addr, hashType("txsourcelength"))
 	if sourcelength == (common.Hash{}) {
-
-		sourceLen, _ := new(big.Int).SetString("1", 10)
-		//save sourceLength
-		evm.StateDB.SetState(addr, hashType("sourcelength"), common.BigToHash(sourceLen))
-		muls, _ := new(big.Int).SetString("10000000", 10)
-		one, _ := new(big.Int).SetString("1", 10)
-		//save sourceTag => tag
-		evm.StateDB.SetState(addr, hashType("sourcetag"), common.BigToHash(muls))
-
-		//tag++ and save data
-		muls.Add(muls, one)
-		evm.StateDB.SetState(addr, common.BigToHash(muls), common.BytesToHash(input))
 
 		txSourceLen, _ := new(big.Int).SetString("1", 10)
 		//save txSourceLength
@@ -605,17 +593,7 @@ func (evm *EVM) SourceCode(caller ContractRef, addr common.Address, input []byte
 		evm.StateDB.SetState(addr, common.BigToHash(txmuls), txhash)
 
 	} else {
-		sourcelen := sourcelength.Big()
 		one, _ := new(big.Int).SetString("1", 10)
-		sourcelen.Add(sourcelen, one)
-		//save sourceLength
-		evm.StateDB.SetState(addr, hashType("sourcelength"), common.BigToHash(sourcelen))
-
-		sourcetag := evm.StateDB.GetState(addr, hashType("sourcetag")).Big()
-		sourcetag.Add(sourcetag, sourcelen)
-
-		//tag++ and save data
-		evm.StateDB.SetState(addr, common.BigToHash(sourcetag), common.BytesToHash(input))
 
 		txSounrceLength := evm.StateDB.GetState(addr, hashType("txsourcelength")).Big()
 		txSounrceLength.Add(txSounrceLength, one)
