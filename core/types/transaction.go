@@ -51,6 +51,7 @@ var (
 	ErrInvalidSig     = errors.New("invalid transaction v, r, s values")
 	errNoSigner       = errors.New("missing signing methods")
 	ErrInvalidType    = errors.New("invalid transaction type")
+	ErrInvalidInput   = errors.New("input Must be empty")
 	ErrInvalidAddress = errors.New("invalid transaction payload address")
 	ErrInvalidAction  = errors.New("invalid transaction payload action")
 	ErrMortgageAsset  = errors.New("mortgage assets cannot be transferred")

@@ -298,6 +298,14 @@ func (st *StateTransition) TransitionDb() (ret []byte, requiredGas, usedGas *big
 			} else if st.txType == types.Binary {
 				st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
 				ret, st.gas, vmerr = evm.Call(sender, *st.msg.To(), st.data, st.gas, st.value, st.ValidatorS)
+			} else if st.txType == types.LoginCandidate || st.txType == types.LogoutCandidate || st.txType == types.Delegate || st.txType == types.UnDelegate {
+
+				if st.data != nil {
+					return nil, nil, nil, false, types.ErrInvalidInput
+				}
+				st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
+				ret, st.gas, vmerr = evm.Call(sender, *st.msg.To(), st.data, st.gas, st.value, st.ValidatorS)
+
 			} else {
 				return nil, nil, nil, false, types.ErrInvalidType
 			}
