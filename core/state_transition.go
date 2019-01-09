@@ -279,7 +279,7 @@ func (st *StateTransition) TransitionDb() (ret []byte, requiredGas, usedGas *big
 				st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
 				ret, st.gas, vmerr = evm.Endorse(sender, *st.msg.To(), st.data, st.gas, st.value, nil, common.BytesToHash(st.txHash))
 			} else {
-				vmerr = types.ErrInvalidType
+				return nil, nil, nil, false, types.ErrInvalidType
 			}
 		case "contract":
 			if st.txType == types.Endorse {
@@ -289,7 +289,7 @@ func (st *StateTransition) TransitionDb() (ret []byte, requiredGas, usedGas *big
 				st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
 				ret, st.gas, vmerr = evm.Call(sender, *st.msg.To(), st.data, st.gas, st.value, nil)
 			} else {
-				vmerr = types.ErrInvalidType
+				return nil, nil, nil, false, types.ErrInvalidType
 			}
 		case "normal":
 			if st.txType == types.Endorse {
@@ -299,7 +299,7 @@ func (st *StateTransition) TransitionDb() (ret []byte, requiredGas, usedGas *big
 				st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
 				ret, st.gas, vmerr = evm.Call(sender, *st.msg.To(), st.data, st.gas, st.value, st.ValidatorS)
 			} else {
-				vmerr = types.ErrInvalidType
+				return nil, nil, nil, false, types.ErrInvalidType
 			}
 		}
 	}
