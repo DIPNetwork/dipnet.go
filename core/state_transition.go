@@ -279,14 +279,28 @@ func (st *StateTransition) TransitionDb() (ret []byte, requiredGas, usedGas *big
 				st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
 				ret, st.gas, vmerr = evm.Endorse(sender, *st.msg.To(), st.data, st.gas, st.value, nil, common.BytesToHash(st.txHash))
 			} else {
-				return nil, nil, nil, false, nil
+				vmerr = types.ErrInvalidType
 			}
 		case "contract":
-			st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
-			ret, st.gas, vmerr = evm.Call(sender, *st.msg.To(), st.data, st.gas, st.value, nil)
+			if st.txType == types.Endorse {
+				st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
+				ret, st.gas, vmerr = evm.Endorse(sender, *st.msg.To(), st.data, st.gas, st.value, nil, common.BytesToHash(st.txHash))
+			} else if st.txType == types.Binary {
+				st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
+				ret, st.gas, vmerr = evm.Call(sender, *st.msg.To(), st.data, st.gas, st.value, nil)
+			} else {
+				vmerr = types.ErrInvalidType
+			}
 		case "normal":
-			st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
-			ret, st.gas, vmerr = evm.Call(sender, *st.msg.To(), st.data, st.gas, st.value, st.ValidatorS)
+			if st.txType == types.Endorse {
+				st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
+				ret, st.gas, vmerr = evm.Endorse(sender, *st.msg.To(), st.data, st.gas, st.value, nil, common.BytesToHash(st.txHash))
+			} else if st.txType == types.Binary {
+				st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
+				ret, st.gas, vmerr = evm.Call(sender, *st.msg.To(), st.data, st.gas, st.value, st.ValidatorS)
+			} else {
+				vmerr = types.ErrInvalidType
+			}
 		}
 	}
 	if vmerr != nil {
