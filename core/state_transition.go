@@ -279,14 +279,36 @@ func (st *StateTransition) TransitionDb() (ret []byte, requiredGas, usedGas *big
 				st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
 				ret, st.gas, vmerr = evm.Endorse(sender, *st.msg.To(), st.data, st.gas, st.value, nil, common.BytesToHash(st.txHash))
 			} else {
-				return nil, nil, nil, false, nil
+				return nil, nil, nil, false, types.ErrInvalidType
 			}
 		case "contract":
-			st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
-			ret, st.gas, vmerr = evm.Call(sender, *st.msg.To(), st.data, st.gas, st.value, nil)
+			if st.txType == types.Endorse {
+				st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
+				ret, st.gas, vmerr = evm.Endorse(sender, *st.msg.To(), st.data, st.gas, st.value, nil, common.BytesToHash(st.txHash))
+			} else if st.txType == types.Binary {
+				st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
+				ret, st.gas, vmerr = evm.Call(sender, *st.msg.To(), st.data, st.gas, st.value, nil)
+			} else {
+				return nil, nil, nil, false, types.ErrInvalidType
+			}
 		case "normal":
-			st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
-			ret, st.gas, vmerr = evm.Call(sender, *st.msg.To(), st.data, st.gas, st.value, st.ValidatorS)
+			if st.txType == types.Endorse {
+				st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
+				ret, st.gas, vmerr = evm.Endorse(sender, *st.msg.To(), st.data, st.gas, st.value, nil, common.BytesToHash(st.txHash))
+			} else if st.txType == types.Binary {
+				st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
+				ret, st.gas, vmerr = evm.Call(sender, *st.msg.To(), st.data, st.gas, st.value, st.ValidatorS)
+			} else if st.txType == types.LoginCandidate || st.txType == types.LogoutCandidate || st.txType == types.Delegate || st.txType == types.UnDelegate {
+
+				if st.data != nil {
+					return nil, nil, nil, false, types.ErrInvalidInput
+				}
+				st.state.SetNonce(msg.From(), st.state.GetNonce(sender.Address())+1)
+				ret, st.gas, vmerr = evm.Call(sender, *st.msg.To(), st.data, st.gas, st.value, st.ValidatorS)
+
+			} else {
+				return nil, nil, nil, false, types.ErrInvalidType
+			}
 		}
 	}
 	if vmerr != nil {

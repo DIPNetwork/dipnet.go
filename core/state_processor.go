@@ -176,7 +176,15 @@ func ApplyTransaction(config *params.ChainConfig, dposContext *types.DposContext
 			gas_mine, gas_template := Layer(new(big.Int).Set(gas).Uint64(), uint64(1))
 			receipt.GasMiner = new(big.Int).SetUint64(gas_mine)
 			receipt.GasDeveloper = new(big.Int).SetUint64(gas_template)
-			receipt.TxType = "CallContract"
+			switch msg.Type() {
+			case types.Binary:
+				receipt.TxType = "CallContract"
+			case types.Endorse:
+				receipt.TxType = "endorse"
+			default:
+				receipt.TxType = "normal"
+			}
+
 		}
 
 		if addressType == "normal" {
@@ -191,6 +199,8 @@ func ApplyTransaction(config *params.ChainConfig, dposContext *types.DposContext
 				receipt.TxType = "Delegate"
 			case types.UnDelegate:
 				receipt.TxType = "UnDelegate"
+			case types.Endorse:
+				receipt.TxType = "endorse"
 			default:
 				receipt.TxType = "normal"
 			}
